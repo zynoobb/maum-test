@@ -13,11 +13,11 @@ export class User {
   @Field(() => String)
   userId: string;
 
-  @Column()
+  @Column({ type: 'varchar', length: 50 })
   @Field(() => String)
   nickname: string;
 
   @CreateDateColumn()
-  @Field(() => Date, { nullable: true })
+  @Field(() => Date)
   createdAt: Date;
 }

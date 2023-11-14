@@ -1,0 +1,27 @@
+version: '3.7'
+
+services:
+  server:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: server
+    ports:
+      - 4000:4000
+    volumes:
+      - ./src:/folder/src
+    env_file:
+      - ./.env
+
+  postgres:
+    image: postgres
+    container_name: postgres
+    ports:
+      - 5432:5432
+    environment:
+      POSTGRES_DB: maum
+      POSTGRES_USER: root
+      POSTGRES_PASSWORD: root
+      TZ: Asia/Seoul
+    volumes:
+      - ./data/postgres/:/var/lib/postgresql/data

@@ -1,7 +1,7 @@
 import {
+  BadRequestException,
   ConflictException,
   Injectable,
-  NotFoundException,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
@@ -14,21 +14,19 @@ export class UsersService {
     private readonly usersRepository: Repository<User>,
   ) {}
 
-  async createUser({ nickname }): Promise<User> {
-    const user = this.fetchUser({ nickname });
+  async createUser({ nickname }: { nickname: string }): Promise<User> {
+    const user = await this.fetchUser({ nickname });
+    if (nickname.length > 50)
+      throw new BadRequestException('입력값 길이 초과입니다.');
     if (user) throw new ConflictException('이미 존재하는 닉네임입니다.');
-
     return this.usersRepository.save({
       nickname,
     });
   }
 
   async fetchUser({ nickname }: { nickname: string }): Promise<User> {
-    const user = await this.usersRepository.findOne({
+    return this.usersRepository.findOne({
       where: { nickname },
     });
-
-    if (!user) throw new NotFoundException('해당 유저가 존재하지 않습니다.');
-    return user;
   }
 }

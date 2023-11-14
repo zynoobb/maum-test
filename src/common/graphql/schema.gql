@@ -5,7 +5,7 @@
 type User {
   userId: String!
   nickname: String!
-  createdAt: DateTime
+  createdAt: DateTime!
 }
 
 """
@@ -15,7 +15,6 @@ scalar DateTime
 
 type Query {
   getHello: String!
-  fetchUserByNickname(nickname: String!): User!
 }
 
 type Mutation {

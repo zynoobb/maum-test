@@ -7,10 +7,12 @@ import { AppService } from './app.service';
 import { ConfigModule } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { typeORMConfig } from './configs/typeorm.config';
+import { UsersModule } from './apis/users/users.module';
 
 @Module({
   imports: [
     TestResolver,
+    UsersModule,
     ConfigModule.forRoot({
       isGlobal: true,
     }),

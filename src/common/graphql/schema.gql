@@ -28,9 +28,16 @@ type Query {
 type Mutation {
   createUser(nickname: String!): User!
   createSurvey(createSurveyInput: CreateSurveyInput!): Survey!
+  updateSurvey(surveyId: Float!, updateSurveyInput: UpdateSurveyInput!): Survey!
+  deleteSurvey(surveyId: Float!): Boolean!
 }
 
 input CreateSurveyInput {
   subject: String!
+  description: String
+}
+
+input UpdateSurveyInput {
+  subject: String
   description: String
 }

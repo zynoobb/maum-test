@@ -1,12 +1,15 @@
 import {
-  BadRequestException,
   ConflictException,
   Injectable,
+  NotFoundException,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Survey } from './entites/survey.entity';
-import { ISurveysServiceCreate } from './interfaces/survey-service.interface';
+import {
+  ISurveyServiceUpdate,
+  ISurveysServiceCreate,
+} from './interfaces/survey-service.interface';
 
 @Injectable()
 export class SurveysService {
@@ -19,7 +22,7 @@ export class SurveysService {
     createSurveyInput,
   }: ISurveysServiceCreate): Promise<Survey> {
     const { subject, description } = createSurveyInput;
-    const survey = await this.fetchSurvey({ subject });
+    const survey = await this.findOneSurveyBySubject({ subject });
 
     if (survey) throw new ConflictException('이미 존재하는 주제입니다.');
 
@@ -29,9 +32,37 @@ export class SurveysService {
     });
   }
 
-  async fetchSurvey({ subject }: { subject: string }) {
+  async updateSurvey({
+    surveyId,
+    updateSurveyInput,
+  }: ISurveyServiceUpdate): Promise<Survey> {
+    const survey = await this.findOneSurveyById({ surveyId });
+    if (!survey)
+      throw new NotFoundException('해당 설문지가 존재하지 않습니다.');
+    return this.surveysRepository.save({
+      surveyId,
+      ...survey,
+      ...updateSurveyInput,
+    });
+  }
+  async deleteSurvey({ surveyId }: { surveyId: number }): Promise<boolean> {
+    const deleteResult = await this.surveysRepository.softDelete({ surveyId });
+    return deleteResult.affected ? true : false;
+  }
+
+  async findOneSurveyBySubject({
+    subject,
+  }: {
+    subject: string;
+  }): Promise<Survey> {
     return this.surveysRepository.findOne({
       where: { subject },
+    });
+  }
+
+  async findOneSurveyById({ surveyId }: { surveyId: number }): Promise<Survey> {
+    return this.surveysRepository.findOne({
+      where: { surveyId },
     });
   }
 }

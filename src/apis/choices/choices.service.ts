@@ -6,6 +6,7 @@ import { SurveysService } from '../surveys/surveys.service';
 import { Choice } from './entites/choice.entity';
 import {
   IChoiceServiceCreate,
+  IChoiceServiceDelete,
   IChoiceServiceUpdate,
 } from './interfaces/choice-service.interface';
 
@@ -57,6 +58,32 @@ export class ChoicesService {
       ...choice,
       ...updateInput,
     });
+  }
+
+  async deleteChoice({
+    deleteChoiceInput,
+  }: IChoiceServiceDelete): Promise<boolean> {
+    const { surveyId, questionId, choiceId } = deleteChoiceInput;
+    await this.surveysService.findOneSurveyById({
+      surveyId,
+    });
+    await this.questionService.findOneQuestionById({
+      surveyId,
+      questionId,
+    });
+    await this.findOneChoiceById({
+      surveyId,
+      questionId,
+      choiceId,
+    });
+
+    const deleteResult = await this.choicesRepository.delete({
+      survey: { surveyId },
+      question: { questionId },
+      choiceId,
+    });
+
+    return deleteResult.affected ? true : false;
   }
 
   async findOneChoiceById({ surveyId, questionId, choiceId }) {

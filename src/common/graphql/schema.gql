@@ -53,6 +53,7 @@ type Mutation {
   deleteQuestion(deleteQuestionInput: DeleteQuestionInput!): Boolean!
   createChoice(createChoiceInput: CreateChoiceInput!): Choice!
   updateChoice(updateChoiceInput: UpdateChoiceInput!): Choice!
+  deleteChoice(deleteChoiceInput: DeleteChoiceInput!): Boolean!
 }
 
 input CreateSurveyInput {
@@ -94,4 +95,10 @@ input UpdateChoiceInput {
   choiceId: Int!
   choiceContent: String
   choiceScore: Int
+}
+
+input DeleteChoiceInput {
+  surveyId: Int!
+  questionId: Int!
+  choiceId: Int!
 }

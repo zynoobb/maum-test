@@ -1,6 +1,7 @@
 import { CreateQuestionInput } from '../dto/create-question.dto';
 import { DeleteQuestionInput } from '../dto/delete-question.dto';
 import { FetchQuestionInput } from '../dto/fetch-question.dto';
+import { FetchQuestionsInRangeInput } from '../dto/fetch-questions-inrange.dto';
 import { UpdateQuestionInput } from '../dto/update-question.dto';
 
 export interface IQuestionServiceCreate {
@@ -17,4 +18,8 @@ export interface IQuestionServiceDelete {
 
 export interface IQuestionServiceFetch {
   fetchQuestionInput: FetchQuestionInput;
+}
+
+export interface IQuestionServiceFetchInRange {
+  fetchQuestionsInRangeInput: FetchQuestionsInRangeInput;
 }

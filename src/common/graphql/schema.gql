@@ -46,6 +46,7 @@ type Query {
   fetchSurvey(fetchSurveyInput: FetchSurveyInput!): Survey!
   fetchAllSurveys: [Survey!]!
   fetchQuestion(fetchQuestionInput: FetchQuestionInput!): Question!
+  fetchQuestionsInRange(fetchQuestionInRangeInput: FetchQuestionsInRangeInput!): [Question!]!
 }
 
 input FetchSurveyInput {
@@ -55,6 +56,12 @@ input FetchSurveyInput {
 input FetchQuestionInput {
   surveyId: Int!
   questionId: Int!
+}
+
+input FetchQuestionsInRangeInput {
+  surveyId: Int!
+  startQuestionId: Int = 1
+  endQuestionId: Int = 100
 }
 
 type Mutation {

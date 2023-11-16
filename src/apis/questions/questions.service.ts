@@ -1,12 +1,13 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { Between, Repository } from 'typeorm';
 import { SurveysService } from '../surveys/surveys.service';
 import { Question } from './entites/question.entity';
 import {
   IQuestionServiceCreate,
   IQuestionServiceDelete,
   IQuestionServiceFetch,
+  IQuestionServiceFetchInRange,
   IQuestionServiceUpdate,
 } from './interfaces/question-service.interface';
 
@@ -41,6 +42,25 @@ export class QuestionsService {
       throw new NotFoundException('해당 문항이 존재하지 않습니다.');
     }
     return question;
+  }
+
+  async fetchQuestionsInRange({
+    fetchQuestionsInRangeInput,
+  }: IQuestionServiceFetchInRange): Promise<Question[]> {
+    const { surveyId, startQuestionId, endQuestionId } =
+      fetchQuestionsInRangeInput;
+    await this.surveysService.findOneSurveyById({ surveyId });
+
+    const questions = await this.questionsRepository.find({
+      relations: ['survey', 'choices'],
+      where: {
+        survey: { surveyId },
+        questionId: Between(startQuestionId, endQuestionId),
+      },
+      order: { questionId: 'ASC' },
+    });
+
+    return questions;
   }
 
   async updateQuestion({

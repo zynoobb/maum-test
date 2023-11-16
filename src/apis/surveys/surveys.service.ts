@@ -61,10 +61,9 @@ export class SurveysService {
   }
 
   async findOneSurveyById({ surveyId }: { surveyId: number }): Promise<Survey> {
-    const survey = this.surveysRepository.findOne({
+    const survey = await this.surveysRepository.findOne({
       where: { surveyId },
     });
-
     if (!survey)
       throw new NotFoundException('해당 설문지가 존재하지 않습니다.');
     return survey;

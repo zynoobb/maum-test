@@ -46,7 +46,7 @@ export class SurveysService {
     });
   }
   async deleteSurvey({ surveyId }: { surveyId: number }): Promise<boolean> {
-    const deleteResult = await this.surveysRepository.softDelete({ surveyId });
+    const deleteResult = await this.surveysRepository.delete({ surveyId });
     return deleteResult.affected ? true : false;
   }
 

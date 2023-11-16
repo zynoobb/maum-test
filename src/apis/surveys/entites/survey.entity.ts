@@ -1,9 +1,10 @@
 import { Field, Int, ObjectType } from '@nestjs/graphql';
+import { Question } from 'src/apis/questions/entites/question.entity';
 import {
   Column,
   CreateDateColumn,
-  DeleteDateColumn,
   Entity,
+  OneToMany,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
@@ -31,6 +32,6 @@ export class Survey {
   @Field(() => Date)
   updatedAt: Date;
 
-  @DeleteDateColumn()
-  deletedAt: Date;
+  @OneToMany(() => Question, (question) => question.survey)
+  questions: Question[];
 }

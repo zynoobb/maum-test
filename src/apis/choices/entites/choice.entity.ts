@@ -3,7 +3,6 @@ import { Question } from 'src/apis/questions/entites/question.entity';
 import {
   Column,
   CreateDateColumn,
-  DeleteDateColumn,
   Entity,
   JoinColumn,
   ManyToOne,
@@ -34,10 +33,10 @@ export class Choice {
   @Field(() => Date)
   updatedAt: Date;
 
-  @DeleteDateColumn()
-  deletedAt: Date;
-
-  @ManyToOne(() => Question, (question) => question.questionId)
+  @ManyToOne(() => Question, (question) => question.questionId, {
+    onDelete: 'CASCADE',
+    onUpdate: 'CASCADE',
+  })
   @JoinColumn({ name: 'questionId' })
   question: Question;
 }

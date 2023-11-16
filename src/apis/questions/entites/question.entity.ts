@@ -3,7 +3,6 @@ import { Survey } from 'src/apis/surveys/entites/survey.entity';
 import {
   Column,
   CreateDateColumn,
-  DeleteDateColumn,
   Entity,
   JoinColumn,
   ManyToOne,
@@ -30,10 +29,11 @@ export class Question {
   @Field(() => Date)
   updatedAt: Date;
 
-  @DeleteDateColumn()
-  deletedAt: Date;
-
-  @ManyToOne(() => Survey, (survey) => survey.surveyId)
+  @ManyToOne(() => Survey, (survey) => survey.questions, {
+    onDelete: 'CASCADE',
+    onUpdate: 'CASCADE',
+  })
   @JoinColumn({ name: 'surveyId' })
+  @Field(() => Survey)
   survey: Survey;
 }

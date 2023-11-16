@@ -6,7 +6,6 @@ import { User } from 'src/apis/users/entities/user.entity';
 import {
   Column,
   CreateDateColumn,
-  DeleteDateColumn,
   Entity,
   JoinColumn,
   ManyToOne,
@@ -33,22 +32,31 @@ export class Answer {
   @Field(() => Date)
   updatedAt: Date;
 
-  @DeleteDateColumn()
-  deletedAt: Date;
-
-  @ManyToOne(() => User, (user) => user.userId)
+  @ManyToOne(() => User, (user) => user.userId, {
+    onDelete: 'CASCADE',
+    onUpdate: 'CASCADE',
+  })
   @JoinColumn({ name: 'userId' })
   user: User;
 
-  @ManyToOne(() => Survey, (survey) => survey.surveyId)
+  @ManyToOne(() => Survey, (survey) => survey.surveyId, {
+    onDelete: 'CASCADE',
+    onUpdate: 'CASCADE',
+  })
   @JoinColumn({ name: 'surveyId' })
   survey: Survey;
 
-  @ManyToOne(() => Question, (question) => question.questionId)
+  @ManyToOne(() => Question, (question) => question.questionId, {
+    onDelete: 'CASCADE',
+    onUpdate: 'CASCADE',
+  })
   @JoinColumn({ name: 'questionId' })
   question: Question;
 
-  @ManyToOne(() => Choice, (choice) => choice.choiceId)
+  @ManyToOne(() => Choice, (choice) => choice.choiceId, {
+    onDelete: 'CASCADE',
+    onUpdate: 'CASCADE',
+  })
   @JoinColumn({ name: 'choiceId' })
   choice: Choice;
 }

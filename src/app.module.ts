@@ -9,12 +9,14 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { typeORMConfig } from './configs/typeorm.config';
 import { UsersModule } from './apis/users/users.module';
 import { SurveysModule } from './apis/surveys/surveys.module';
+import { QuestionsModule } from './apis/questions/questions.module';
 
 @Module({
   imports: [
     TestResolver,
     UsersModule,
     SurveysModule,
+    QuestionsModule,
     ConfigModule.forRoot({
       isGlobal: true,
     }),

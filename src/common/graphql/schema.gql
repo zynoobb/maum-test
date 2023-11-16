@@ -21,6 +21,13 @@ type Survey {
   updatedAt: DateTime!
 }
 
+type Question {
+  questionId: Int!
+  content: String!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+}
+
 type Query {
   getHello: String!
 }
@@ -30,6 +37,7 @@ type Mutation {
   createSurvey(createSurveyInput: CreateSurveyInput!): Survey!
   updateSurvey(surveyId: Float!, updateSurveyInput: UpdateSurveyInput!): Survey!
   deleteSurvey(surveyId: Float!): Boolean!
+  createQuestion(createQuestionInput: CreateQuestionInput!): Question!
 }
 
 input CreateSurveyInput {
@@ -40,4 +48,9 @@ input CreateSurveyInput {
 input UpdateSurveyInput {
   subject: String
   description: String
+}
+
+input CreateQuestionInput {
+  surveyId: Int!
+  content: String!
 }

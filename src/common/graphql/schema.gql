@@ -19,6 +19,7 @@ type Question {
   createdAt: DateTime!
   updatedAt: DateTime!
   survey: Survey!
+  choices: [Choice!]!
 }
 
 type Choice {
@@ -44,10 +45,16 @@ type Survey {
 type Query {
   fetchSurvey(fetchSurveyInput: FetchSurveyInput!): Survey!
   fetchAllSurveys: [Survey!]!
+  fetchQuestion(fetchQuestionInput: FetchQuestionInput!): Question!
 }
 
 input FetchSurveyInput {
   surveyId: Int!
+}
+
+input FetchQuestionInput {
+  surveyId: Int!
+  questionId: Int!
 }
 
 type Mutation {

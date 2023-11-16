@@ -1,6 +1,7 @@
-import { Args, Mutation, Resolver } from '@nestjs/graphql';
+import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
 import { CreateQuestionInput } from './dto/create-question.dto';
 import { DeleteQuestionInput } from './dto/delete-question.dto';
+import { FetchQuestionInput } from './dto/fetch-question.dto';
 import { UpdateQuestionInput } from './dto/update-question.dto';
 import { Question } from './entites/question.entity';
 import { QuestionsService } from './questions.service';
@@ -16,6 +17,13 @@ export class QuestionsResolver {
     return this.questionsService.createQuestion({
       createQuestionInput,
     });
+  }
+
+  @Query(() => Question)
+  fetchQuestion(
+    @Args('fetchQuestionInput') fetchQuestionInput: FetchQuestionInput,
+  ): Promise<Question> {
+    return this.questionsService.fetchQuestion({ fetchQuestionInput });
   }
 
   @Mutation(() => Question)

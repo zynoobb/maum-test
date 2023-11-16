@@ -6,6 +6,7 @@ import { Question } from './entites/question.entity';
 import {
   IQuestionServiceCreate,
   IQuestionServiceDelete,
+  IQuestionServiceFetch,
   IQuestionServiceUpdate,
 } from './interfaces/question-service.interface';
 
@@ -24,6 +25,22 @@ export class QuestionsService {
       surveyId: createQuestionInput.surveyId,
     });
     return this.questionsRepository.save({ survey, ...createQuestionInput });
+  }
+
+  async fetchQuestion({
+    fetchQuestionInput,
+  }: IQuestionServiceFetch): Promise<Question> {
+    const { questionId, surveyId } = fetchQuestionInput;
+    const question = await this.questionsRepository.findOne({
+      relations: ['survey', 'choices'],
+      where: { survey: { surveyId }, questionId },
+      order: { choices: { choiceId: 'ASC' } },
+    });
+
+    if (!question) {
+      throw new NotFoundException('해당 문항이 존재하지 않습니다.');
+    }
+    return question;
   }
 
   async updateQuestion({

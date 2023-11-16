@@ -1,4 +1,5 @@
 import { Field, Int, ObjectType } from '@nestjs/graphql';
+import { Choice } from 'src/apis/choices/entites/choice.entity';
 import { Survey } from 'src/apis/surveys/entites/survey.entity';
 import {
   Column,
@@ -6,6 +7,7 @@ import {
   Entity,
   JoinColumn,
   ManyToOne,
+  OneToMany,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
@@ -36,4 +38,8 @@ export class Question {
   @JoinColumn({ name: 'surveyId' })
   @Field(() => Survey)
   survey: Survey;
+
+  @OneToMany(() => Choice, (choice) => choice.question)
+  @Field(() => [Choice])
+  choices: Choice[];
 }

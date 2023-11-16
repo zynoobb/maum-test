@@ -2,7 +2,6 @@ import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
 import { Module } from '@nestjs/common';
 import { GraphQLModule } from '@nestjs/graphql';
 import { AppController } from './app.controller';
-import { TestResolver } from './test.resolver';
 import { AppService } from './app.service';
 import { ConfigModule } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
@@ -14,7 +13,6 @@ import { ChoicesModule } from './apis/choices/choices.module';
 
 @Module({
   imports: [
-    TestResolver,
     UsersModule,
     SurveysModule,
     QuestionsModule,

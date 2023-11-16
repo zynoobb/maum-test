@@ -65,7 +65,7 @@ input FetchQuestionsInRangeInput {
 }
 
 type Mutation {
-  createUser(nickname: String!): User!
+  createUser(createUserInput: CreateUserInput!): User!
   createSurvey(createSurveyInput: CreateSurveyInput!): Survey!
   updateSurvey(surveyId: Float!, updateSurveyInput: UpdateSurveyInput!): Survey!
   deleteSurvey(surveyId: Float!): Boolean!
@@ -75,6 +75,10 @@ type Mutation {
   createChoice(createChoiceInput: CreateChoiceInput!): Choice!
   updateChoice(updateChoiceInput: UpdateChoiceInput!): Choice!
   deleteChoice(deleteChoiceInput: DeleteChoiceInput!): Boolean!
+}
+
+input CreateUserInput {
+  nickname: String!
 }
 
 input CreateSurveyInput {

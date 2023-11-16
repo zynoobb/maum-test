@@ -23,10 +23,6 @@ export class QuestionsService {
     const survey = await this.surveysService.findOneSurveyById({
       surveyId: createQuestionInput.surveyId,
     });
-
-    if (!survey)
-      throw new NotFoundException('해당 설문지가 존재하지 않습니다.');
-
     return this.questionsRepository.save({ survey, ...createQuestionInput });
   }
 
@@ -34,16 +30,8 @@ export class QuestionsService {
     updateQuestionInput,
   }: IQuestionServiceUpdate): Promise<Question> {
     const { surveyId, questionId } = updateQuestionInput;
-
     const survey = await this.surveysService.findOneSurveyById({ surveyId });
-    if (!survey) {
-      throw new NotFoundException('해당 설문지가 존재하지 않습니다.');
-    }
     const question = await this.findOneQuestionById({ surveyId, questionId });
-    if (!question) {
-      throw new NotFoundException('해당 문항이 존재하지 않습니다.');
-    }
-
     const updated = await this.questionsRepository.save({
       survey,
       ...question,
@@ -57,22 +45,21 @@ export class QuestionsService {
     deleteQuestionInput,
   }: IQuestionServiceDelete): Promise<boolean> {
     const { surveyId, questionId } = deleteQuestionInput;
-    const question = await this.findOneQuestionById({ surveyId, questionId });
-
-    if (!question) {
-      throw new NotFoundException('해당 문항이 존재하지 않습니다.');
-    }
+    await this.findOneQuestionById({ surveyId, questionId });
     const deleteResult = await this.questionsRepository.delete({
       survey: { surveyId },
       questionId,
     });
-
     return deleteResult.affected ? true : false;
   }
 
   async findOneQuestionById({ surveyId, questionId }): Promise<Question> {
-    return this.questionsRepository.findOne({
+    const question = await this.questionsRepository.findOne({
       where: { survey: { surveyId }, questionId },
     });
+    if (!question) {
+      throw new NotFoundException('해당 문항이 존재하지 않습니다.');
+    }
+    return question;
   }
 }

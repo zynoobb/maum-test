@@ -22,9 +22,7 @@ export class SurveysService {
     createSurveyInput,
   }: ISurveysServiceCreate): Promise<Survey> {
     const { subject, description } = createSurveyInput;
-    const survey = await this.findOneSurveyBySubject({ subject });
-
-    if (survey) throw new ConflictException('이미 존재하는 주제입니다.');
+    await this.findOneSurveyBySubject({ subject });
 
     return this.surveysRepository.save({
       subject,
@@ -37,8 +35,8 @@ export class SurveysService {
     updateSurveyInput,
   }: ISurveyServiceUpdate): Promise<Survey> {
     const survey = await this.findOneSurveyById({ surveyId });
-    if (!survey)
-      throw new NotFoundException('해당 설문지가 존재하지 않습니다.');
+    await this.findOneSurveyBySubject({ subject: updateSurveyInput.subject });
+
     return this.surveysRepository.save({
       surveyId,
       ...survey,
@@ -55,14 +53,20 @@ export class SurveysService {
   }: {
     subject: string;
   }): Promise<Survey> {
-    return this.surveysRepository.findOne({
+    const survey = await this.surveysRepository.findOne({
       where: { subject },
     });
+    if (survey) throw new ConflictException('이미 존재하는 주제입니다.');
+    return survey;
   }
 
   async findOneSurveyById({ surveyId }: { surveyId: number }): Promise<Survey> {
-    return this.surveysRepository.findOne({
+    const survey = this.surveysRepository.findOne({
       where: { surveyId },
     });
+
+    if (!survey)
+      throw new NotFoundException('해당 설문지가 존재하지 않습니다.');
+    return survey;
   }
 }

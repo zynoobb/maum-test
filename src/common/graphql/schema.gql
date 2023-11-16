@@ -13,17 +13,18 @@ A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date
 """
 scalar DateTime
 
+type Question {
+  questionId: Int!
+  content: String!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  survey: Survey!
+}
+
 type Survey {
   surveyId: Int!
   subject: String!
   description: String
-  createdAt: DateTime!
-  updatedAt: DateTime!
-}
-
-type Question {
-  questionId: Int!
-  content: String!
   createdAt: DateTime!
   updatedAt: DateTime!
 }
@@ -38,6 +39,8 @@ type Mutation {
   updateSurvey(surveyId: Float!, updateSurveyInput: UpdateSurveyInput!): Survey!
   deleteSurvey(surveyId: Float!): Boolean!
   createQuestion(createQuestionInput: CreateQuestionInput!): Question!
+  updateQuestion(updateQuestionInput: UpdateQuestionInput!): Question!
+  deleteQuestion(deleteQuestionInput: DeleteQuestionInput!): Boolean!
 }
 
 input CreateSurveyInput {
@@ -53,4 +56,15 @@ input UpdateSurveyInput {
 input CreateQuestionInput {
   surveyId: Int!
   content: String!
+}
+
+input UpdateQuestionInput {
+  surveyId: Int
+  content: String
+  questionId: Int!
+}
+
+input DeleteQuestionInput {
+  surveyId: Int!
+  questionId: Int!
 }

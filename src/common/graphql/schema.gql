@@ -37,10 +37,18 @@ type Survey {
   description: String
   createdAt: DateTime!
   updatedAt: DateTime!
+  questions: [Question!]!
+  choices: [Choice!]!
 }
 
 type Query {
   getHello: String!
+  fetchSurvey(fetchSurveyInput: FetchSurveyInput!): Survey!
+  fetchAllSurveys: [Survey!]!
+}
+
+input FetchSurveyInput {
+  surveyId: Int!
 }
 
 type Mutation {

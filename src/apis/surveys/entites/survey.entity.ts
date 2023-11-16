@@ -34,10 +34,10 @@ export class Survey {
   updatedAt: Date;
 
   @OneToMany(() => Question, (question) => question.survey)
-  // @Field(() => [Question])
+  @Field(() => [Question])
   questions: Question[];
 
   @OneToMany(() => Choice, (choice) => choice.survey)
-  // @Field(() => [Choice])
+  @Field(() => [Choice])
   choices: Choice[];
 }

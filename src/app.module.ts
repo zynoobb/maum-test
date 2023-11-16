@@ -10,6 +10,7 @@ import { typeORMConfig } from './configs/typeorm.config';
 import { UsersModule } from './apis/users/users.module';
 import { SurveysModule } from './apis/surveys/surveys.module';
 import { QuestionsModule } from './apis/questions/questions.module';
+import { ChoicesModule } from './apis/choices/choices.module';
 
 @Module({
   imports: [
@@ -17,6 +18,7 @@ import { QuestionsModule } from './apis/questions/questions.module';
     UsersModule,
     SurveysModule,
     QuestionsModule,
+    ChoicesModule,
     ConfigModule.forRoot({
       isGlobal: true,
     }),

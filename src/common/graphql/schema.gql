@@ -21,6 +21,16 @@ type Question {
   survey: Survey!
 }
 
+type Choice {
+  choiceId: Int!
+  choiceContent: String!
+  choiceScore: Int!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  survey: Survey!
+  question: Question!
+}
+
 type Survey {
   surveyId: Int!
   subject: String!
@@ -41,6 +51,8 @@ type Mutation {
   createQuestion(createQuestionInput: CreateQuestionInput!): Question!
   updateQuestion(updateQuestionInput: UpdateQuestionInput!): Question!
   deleteQuestion(deleteQuestionInput: DeleteQuestionInput!): Boolean!
+  createChoice(createChoiceInput: CreateChoiceInput!): Choice!
+  updateChoice(updateChoiceInput: UpdateChoiceInput!): Choice!
 }
 
 input CreateSurveyInput {
@@ -59,12 +71,27 @@ input CreateQuestionInput {
 }
 
 input UpdateQuestionInput {
-  surveyId: Int
-  content: String
+  surveyId: Int!
+  content: String!
   questionId: Int!
 }
 
 input DeleteQuestionInput {
   surveyId: Int!
   questionId: Int!
+}
+
+input CreateChoiceInput {
+  surveyId: Int!
+  questionId: Int!
+  choiceContent: String!
+  choiceScore: Int!
+}
+
+input UpdateChoiceInput {
+  surveyId: Int!
+  questionId: Int!
+  choiceId: Int!
+  choiceContent: String
+  choiceScore: Int
 }

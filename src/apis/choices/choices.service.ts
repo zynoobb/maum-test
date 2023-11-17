@@ -93,7 +93,7 @@ export class ChoicesService {
   }: IChoiceServiceFetch): Promise<Choice> {
     const { surveyId, questionId, choiceId } = fetchChoiceInput;
     const choice = await this.choicesRepository.findOne({
-      relations: ['survey', 'question'],
+      relations: ['survey', 'question', 'answers'],
       where: { survey: { surveyId }, question: { questionId }, choiceId },
     });
 
@@ -111,7 +111,7 @@ export class ChoicesService {
       fetchChoicesInRangeInput;
 
     const choices = await this.choicesRepository.find({
-      relations: ['survey', 'question'],
+      relations: ['survey', 'question', 'answers'],
       where: {
         survey: { surveyId },
         question: { questionId },

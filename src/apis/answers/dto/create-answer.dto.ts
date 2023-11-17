@@ -18,5 +18,4 @@ export class CreateAnswerInput {
   @Field(() => Int)
   @IsNumber()
   choiceId: number;
-  //
 }

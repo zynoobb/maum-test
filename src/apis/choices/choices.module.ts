@@ -16,5 +16,6 @@ import { Choice } from './entites/choice.entity';
     SurveysService,
     QuestionsService,
   ],
+  exports: [ChoicesService],
 })
 export class ChoicesModule {}

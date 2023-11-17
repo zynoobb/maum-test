@@ -1,8 +1,10 @@
 import { Field, ObjectType } from '@nestjs/graphql';
+import { Answer } from 'src/apis/answers/entites/answer.entity';
 import {
   Column,
   CreateDateColumn,
   Entity,
+  OneToMany,
   PrimaryGeneratedColumn,
 } from 'typeorm';
 
@@ -20,4 +22,8 @@ export class User {
   @CreateDateColumn()
   @Field(() => Date)
   createdAt: Date;
+
+  @OneToMany(() => Answer, (answer) => answer.user)
+  @Field(() => [Answer])
+  answers: Answer[];
 }

@@ -53,10 +53,11 @@ export class Answer {
   @JoinColumn({ name: 'questionId' })
   question: Question;
 
-  @ManyToOne(() => Choice, (choice) => choice.choiceId, {
+  @ManyToOne(() => Choice, {
     onDelete: 'CASCADE',
     onUpdate: 'CASCADE',
   })
+  @Field(() => Choice)
   @JoinColumn({ name: 'choiceId' })
   choice: Choice;
 }

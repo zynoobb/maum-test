@@ -29,11 +29,13 @@ export class UsersService {
 
   async fetchUser({ fetchUserInput }: IUserServiceFetch): Promise<User> {
     const { userId } = fetchUserInput;
+
     const user = await this.usersRepository.findOne({
+      relations: ['answers'],
       where: { userId },
     });
-    if (!user) throw new NotFoundException('존재하지 않는 사용자입니다.');
 
+    if (!user) throw new NotFoundException('존재하지 않는 사용자입니다.');
     return user;
   }
 

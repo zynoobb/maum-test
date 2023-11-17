@@ -8,6 +8,7 @@ import { UsersModule } from './apis/users/users.module';
 import { SurveysModule } from './apis/surveys/surveys.module';
 import { QuestionsModule } from './apis/questions/questions.module';
 import { ChoicesModule } from './apis/choices/choices.module';
+import { AnswersModule } from './apis/answers/answers.module';
 
 @Module({
   imports: [
@@ -15,6 +16,7 @@ import { ChoicesModule } from './apis/choices/choices.module';
     SurveysModule,
     QuestionsModule,
     ChoicesModule,
+    AnswersModule,
     ConfigModule.forRoot({
       isGlobal: true,
     }),

@@ -2,10 +2,14 @@
 # THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
 # ------------------------------------------------------
 
-type User {
-  userId: String!
-  nickname: String!
+type Survey {
+  surveyId: Int!
+  subject: String!
+  description: String
   createdAt: DateTime!
+  updatedAt: DateTime!
+  questions: [Question!]!
+  choices: [Choice!]!
 }
 
 """
@@ -32,14 +36,19 @@ type Choice {
   question: Question!
 }
 
-type Survey {
-  surveyId: Int!
-  subject: String!
-  description: String
+type Answer {
+  answerId: Int!
+  totalScore: Int
   createdAt: DateTime!
   updatedAt: DateTime!
-  questions: [Question!]!
-  choices: [Choice!]!
+  choice: Choice!
+}
+
+type User {
+  userId: String!
+  nickname: String!
+  createdAt: DateTime!
+  answers: [Answer!]!
 }
 
 type Query {
@@ -50,6 +59,7 @@ type Query {
   fetchQuestionsInRange(fetchQuestionInRangeInput: FetchQuestionsInRangeInput!): [Question!]!
   fetchChoice(fetchChoiceInput: FetchChoiceInput!): Choice!
   fetchChoicesInRange(fetchChoicesInRangeInput: FetchChoicesInRangeInput!): [Choice!]!
+  fetchAnswer(fetchAnswerInput: FetchAnswerInput!): Answer!
 }
 
 input FetchUserInput {
@@ -84,6 +94,13 @@ input FetchChoicesInRangeInput {
   endChoiceId: Int = 100
 }
 
+input FetchAnswerInput {
+  userId: String!
+  surveyId: Int!
+  questionId: Int!
+  choiceId: Int!
+}
+
 type Mutation {
   createUser(createUserInput: CreateUserInput!): User!
   createSurvey(createSurveyInput: CreateSurveyInput!): Survey!
@@ -95,6 +112,7 @@ type Mutation {
   createChoice(createChoiceInput: CreateChoiceInput!): Choice!
   updateChoice(updateChoiceInput: UpdateChoiceInput!): Choice!
   deleteChoice(deleteChoiceInput: DeleteChoiceInput!): Boolean!
+  createAnswer(createAnswerInput: CreateAnswerInput!): Answer!
 }
 
 input CreateUserInput {
@@ -143,6 +161,13 @@ input UpdateChoiceInput {
 }
 
 input DeleteChoiceInput {
+  surveyId: Int!
+  questionId: Int!
+  choiceId: Int!
+}
+
+input CreateAnswerInput {
+  userId: String!
   surveyId: Int!
   questionId: Int!
   choiceId: Int!

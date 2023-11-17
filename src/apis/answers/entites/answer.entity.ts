@@ -4,7 +4,6 @@ import { Question } from 'src/apis/questions/entites/question.entity';
 import { Survey } from 'src/apis/surveys/entites/survey.entity';
 import { User } from 'src/apis/users/entities/user.entity';
 import {
-  Column,
   CreateDateColumn,
   Entity,
   JoinColumn,
@@ -19,10 +18,6 @@ export class Answer {
   @PrimaryGeneratedColumn('increment')
   @Field(() => Int)
   answerId: number;
-
-  @Column({ nullable: true })
-  @Field(() => Int, { nullable: true })
-  totalScore: number;
 
   @CreateDateColumn()
   @Field(() => Date)

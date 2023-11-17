@@ -39,7 +39,6 @@ type Choice {
 
 type Answer {
   answerId: Int!
-  totalScore: Int
   createdAt: DateTime!
   updatedAt: DateTime!
   choice: Choice!

@@ -47,7 +47,6 @@ export class AnswersService {
       question: { questionId },
       choice,
       user,
-      totalScore: choice.choiceScore,
     });
 
     return result;

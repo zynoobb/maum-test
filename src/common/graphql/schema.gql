@@ -43,12 +43,17 @@ type Survey {
 }
 
 type Query {
+  fetchUser(fetchUserInput: FetchUserInput!): User!
   fetchSurvey(fetchSurveyInput: FetchSurveyInput!): Survey!
   fetchAllSurveys: [Survey!]!
   fetchQuestion(fetchQuestionInput: FetchQuestionInput!): Question!
   fetchQuestionsInRange(fetchQuestionInRangeInput: FetchQuestionsInRangeInput!): [Question!]!
   fetchChoice(fetchChoiceInput: FetchChoiceInput!): Choice!
   fetchChoicesInRange(fetchChoicesInRangeInput: FetchChoicesInRangeInput!): [Choice!]!
+}
+
+input FetchUserInput {
+  userId: String!
 }
 
 input FetchSurveyInput {

@@ -1,4 +1,5 @@
 import {
+  BadRequestException,
   ConflictException,
   Injectable,
   NotFoundException,
@@ -11,6 +12,7 @@ import { Answer } from './entites/answer.entity';
 import {
   IAnswerServiceCreate,
   IAnswerServiceFindOnePreAnswer,
+  IAnswerServiceUpdate,
 } from './interfaces/answer-service.interface';
 
 @Injectable()
@@ -39,8 +41,12 @@ export class AnswersService {
 
     if (answer) {
       throw new ConflictException('이미 응답한 답변입니다.');
+    } else if (
+      choice.survey.surveyId !== surveyId ||
+      choice.question.questionId !== questionId
+    ) {
+      throw new BadRequestException('올바르지 않은 데이터입니다.');
     }
-
     return this.answersRepository.save({
       survey: { surveyId },
       question: { questionId },
@@ -55,6 +61,32 @@ export class AnswersService {
       throw new NotFoundException('존재하는 답변이 없습니다.');
     }
     return answer;
+  }
+
+  async updateAnswer({
+    updateAnswerInput,
+  }: IAnswerServiceUpdate): Promise<Answer> {
+    const { answerId, choiceId } = updateAnswerInput;
+
+    const answer = await this.findOneAnswerById({ answerId });
+    if (!answerId) {
+      throw new NotFoundException('수정할 수 있는 답변이 존재하지 않습니다.');
+    }
+    const choice = await this.choicesService.findOneChoiceById({ choiceId });
+    if (!choice) {
+      throw new NotFoundException('수정할 수 있는 선택지가 존재하지 않습니다.');
+    }
+
+    if (
+      choice.question.questionId !== answer.question.questionId ||
+      choice.survey.surveyId !== answer.survey.surveyId
+    ) {
+      throw new BadRequestException('올바르지 않은 데이터입니다.');
+    }
+    return this.answersRepository.save({
+      ...answer,
+      choice,
+    });
   }
 
   async findOneAnswerById({ answerId }: { answerId: number }): Promise<Answer> {

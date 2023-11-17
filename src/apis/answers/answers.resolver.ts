@@ -1,6 +1,7 @@
 import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
 import { AnswersService } from './answers.service';
 import { CreateAnswerInput } from './dto/create-answer.dto';
+import { UpdateAnswerInput } from './dto/update-answer.dto';
 import { Answer } from './entites/answer.entity';
 
 @Resolver()
@@ -17,5 +18,12 @@ export class AnswersResolver {
   @Query(() => Answer)
   fetchAnswer(@Args('answerId') answerId: number): Promise<Answer> {
     return this.answersService.fetchAnswer({ answerId });
+  }
+
+  @Mutation(() => Answer)
+  updateAnswer(
+    @Args('updateAnswerInput') updateAnswerInput: UpdateAnswerInput,
+  ): Promise<Answer> {
+    return this.answersService.updateAnswer({ updateAnswerInput });
   }
 }

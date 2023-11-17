@@ -26,4 +26,9 @@ export class AnswersResolver {
   ): Promise<Answer> {
     return this.answersService.updateAnswer({ updateAnswerInput });
   }
+
+  @Mutation(() => Boolean)
+  deleteAnswer(@Args('answerId') answerId: number): Promise<boolean> {
+    return this.answersService.deleteAnswer({ answerId });
+  }
 }

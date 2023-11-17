@@ -89,6 +89,13 @@ export class AnswersService {
     });
   }
 
+  async deleteAnswer({ answerId }: { answerId: number }): Promise<boolean> {
+    const deleteResult = await this.answersRepository.delete({
+      answerId,
+    });
+    return deleteResult.affected ? true : false;
+  }
+
   async findOneAnswerById({ answerId }: { answerId: number }): Promise<Answer> {
     const answer = await this.answersRepository.findOne({
       relations: ['survey', 'question', 'choice', 'user'],

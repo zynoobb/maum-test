@@ -65,6 +65,7 @@ type Query {
   fetchChoice(choiceId: Float!): Choice!
   fetchChoicesInRange(fetchChoicesInRangeInput: FetchChoicesInRangeInput!): [Choice!]!
   fetchAnswer(answerId: Float!): Answer!
+  fetchAnswers: [Answer!]!
 }
 
 input FetchQuestionsInRangeInput {

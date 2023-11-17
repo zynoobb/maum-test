@@ -20,6 +20,11 @@ export class AnswersResolver {
     return this.answersService.fetchAnswer({ answerId });
   }
 
+  @Query(() => [Answer])
+  fetchAnswers(): Promise<Answer[]> {
+    return this.answersService.fetchAnswers();
+  }
+
   @Mutation(() => Answer)
   updateAnswer(
     @Args('updateAnswerInput') updateAnswerInput: UpdateAnswerInput,

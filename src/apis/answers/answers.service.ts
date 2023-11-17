@@ -63,6 +63,26 @@ export class AnswersService {
     return answer;
   }
 
+  async fetchAnswers(): Promise<Answer[]> {
+    return this.answersRepository.find({
+      relations: ['survey', 'question', 'choice', 'user'],
+      order: {
+        user: {
+          userId: 'ASC',
+        },
+        survey: {
+          surveyId: 'ASC',
+        },
+        question: {
+          questionId: 'ASC',
+        },
+        choice: {
+          choiceId: 'ASC',
+        },
+      },
+    });
+  }
+
   async updateAnswer({
     updateAnswerInput,
   }: IAnswerServiceUpdate): Promise<Answer> {

@@ -6,10 +6,6 @@ import {
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { User } from './entities/user.entity';
-import {
-  IUserServiceFetch,
-  IUsersServiceCreate,
-} from './interfaces/user-service.interface';
 
 @Injectable()
 export class UsersService {
@@ -18,33 +14,35 @@ export class UsersService {
     private readonly usersRepository: Repository<User>,
   ) {}
 
-  async createUser({ createUserInput }: IUsersServiceCreate): Promise<User> {
-    const { nickname } = createUserInput;
-    await this.findOneByNickName({ nickname });
-
+  async createUser({ nickname }: { nickname: string }): Promise<User> {
+    await this.findOneUserByNickName({ nickname });
     return this.usersRepository.save({
       nickname,
-      answers: [],
     });
   }
 
-  async fetchUser({ fetchUserInput }: IUserServiceFetch): Promise<User> {
-    const { userId } = fetchUserInput;
-
-    const user = await this.usersRepository.findOne({
-      relations: ['answers'],
-      where: { userId },
-    });
-
+  async fetchUser({ userId }: { userId: string }): Promise<User> {
+    const user = await this.findOneUserById({ userId });
     if (!user) throw new NotFoundException('존재하지 않는 사용자입니다.');
     return user;
   }
 
-  async findOneByNickName({ nickname }: { nickname: string }): Promise<User> {
+  async findOneUserByNickName({
+    nickname,
+  }: {
+    nickname: string;
+  }): Promise<User> {
     const user = await this.usersRepository.findOne({
       where: { nickname },
     });
     if (user) throw new ConflictException('이미 존재하는 닉네임입니다.');
     return user;
+  }
+
+  async findOneUserById({ userId }: { userId: string }): Promise<User> {
+    return this.usersRepository.findOne({
+      relations: ['answers'],
+      where: { userId },
+    });
   }
 }

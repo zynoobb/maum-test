@@ -1,6 +1,5 @@
 import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
 import { CreateSurveyInput } from './dto/create-survey.dto';
-import { FetchSurveyInput } from './dto/fetch-survey.dto';
 import { UpdateSurveyInput } from './dto/update-survey.dto';
 import { Survey } from './entites/survey.entity';
 import { SurveysService } from './surveys.service';
@@ -18,11 +17,8 @@ export class SurveysResolver {
   }
 
   @Query(() => Survey)
-  fetchSurvey(
-    @Args('fetchSurveyInput')
-    fetchSurveyInput: FetchSurveyInput,
-  ): Promise<Survey> {
-    return this.surveysService.fetchSurvey({ fetchSurveyInput });
+  fetchSurvey(@Args('surveyId') surveyId: number): Promise<Survey> {
+    return this.surveysService.fetchSurvey({ surveyId });
   }
 
   @Query(() => [Survey])

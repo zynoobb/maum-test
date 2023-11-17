@@ -57,39 +57,20 @@ type User {
 }
 
 type Query {
-  fetchUser(fetchUserInput: FetchUserInput!): User!
-  fetchSurvey(fetchSurveyInput: FetchSurveyInput!): Survey!
+  fetchUser(userId: String!): User!
+  fetchSurvey(surveyId: Float!): Survey!
   fetchAllSurveys: [Survey!]!
-  fetchQuestion(fetchQuestionInput: FetchQuestionInput!): Question!
+  fetchQuestion(questionId: Float!): Question!
   fetchQuestionsInRange(fetchQuestionInRangeInput: FetchQuestionsInRangeInput!): [Question!]!
-  fetchChoice(fetchChoiceInput: FetchChoiceInput!): Choice!
+  fetchChoice(choiceId: Float!): Choice!
   fetchChoicesInRange(fetchChoicesInRangeInput: FetchChoicesInRangeInput!): [Choice!]!
-  fetchAnswer(fetchAnswerInput: FetchAnswerInput!): Answer!
-}
-
-input FetchUserInput {
-  userId: String!
-}
-
-input FetchSurveyInput {
-  surveyId: Int!
-}
-
-input FetchQuestionInput {
-  surveyId: Int!
-  questionId: Int!
+  fetchAnswer(answerId: Float!): Answer!
 }
 
 input FetchQuestionsInRangeInput {
   surveyId: Int!
   startQuestionId: Int = 1
   endQuestionId: Int = 100
-}
-
-input FetchChoiceInput {
-  surveyId: Int!
-  questionId: Int!
-  choiceId: Int!
 }
 
 input FetchChoicesInRangeInput {
@@ -99,30 +80,18 @@ input FetchChoicesInRangeInput {
   endChoiceId: Int = 100
 }
 
-input FetchAnswerInput {
-  userId: String!
-  surveyId: Int!
-  questionId: Int!
-  choiceId: Int!
-}
-
 type Mutation {
-  createUser(createUserInput: CreateUserInput!): User!
+  createUser(nickname: String!): User!
   createSurvey(createSurveyInput: CreateSurveyInput!): Survey!
   updateSurvey(updateSurveyInput: UpdateSurveyInput!): Survey!
   deleteSurvey(surveyId: Float!): Boolean!
   createQuestion(createQuestionInput: CreateQuestionInput!): Question!
   updateQuestion(updateQuestionInput: UpdateQuestionInput!): Question!
-  deleteQuestion(deleteQuestionInput: DeleteQuestionInput!): Boolean!
+  deleteQuestion(questionId: Float!): Boolean!
   createChoice(createChoiceInput: CreateChoiceInput!): Choice!
   updateChoice(updateChoiceInput: UpdateChoiceInput!): Choice!
-  deleteChoice(deleteChoiceInput: DeleteChoiceInput!): Boolean!
+  deleteChoice(choiceId: Float!): Boolean!
   createAnswer(createAnswerInput: CreateAnswerInput!): Answer!
-  updateAnswer(updateAnswerInput: UpdateAnswerInput!): Answer!
-}
-
-input CreateUserInput {
-  nickname: String!
 }
 
 input CreateSurveyInput {
@@ -142,14 +111,8 @@ input CreateQuestionInput {
 }
 
 input UpdateQuestionInput {
-  surveyId: Int!
+  questionId: Int!
   content: String!
-  questionId: Int!
-}
-
-input DeleteQuestionInput {
-  surveyId: Int!
-  questionId: Int!
 }
 
 input CreateChoiceInput {
@@ -160,27 +123,12 @@ input CreateChoiceInput {
 }
 
 input UpdateChoiceInput {
-  surveyId: Int!
-  questionId: Int!
   choiceId: Int!
   choiceContent: String
   choiceScore: Int
 }
 
-input DeleteChoiceInput {
-  surveyId: Int!
-  questionId: Int!
-  choiceId: Int!
-}
-
 input CreateAnswerInput {
-  userId: String!
-  surveyId: Int!
-  questionId: Int!
-  choiceId: Int!
-}
-
-input UpdateAnswerInput {
   userId: String!
   surveyId: Int!
   questionId: Int!

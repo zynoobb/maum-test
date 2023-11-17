@@ -5,14 +5,6 @@ import { IsNumber, IsOptional, Length } from 'class-validator';
 export class UpdateChoiceInput {
   @Field(() => Int)
   @IsNumber()
-  surveyId: number;
-
-  @Field(() => Int)
-  @IsNumber()
-  questionId: number;
-
-  @Field(() => Int)
-  @IsNumber()
   choiceId: number;
 
   @Field(() => String, { nullable: true })

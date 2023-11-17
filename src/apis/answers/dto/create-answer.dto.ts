@@ -1,10 +1,11 @@
 import { Field, InputType, Int } from '@nestjs/graphql';
-import { IsNumber, IsString } from 'class-validator';
+import { IsNotEmpty, IsNumber, IsString } from 'class-validator';
 
 @InputType()
 export class CreateAnswerInput {
   @Field(() => String)
   @IsString()
+  @IsNotEmpty()
   userId: string;
 
   @Field(() => Int)

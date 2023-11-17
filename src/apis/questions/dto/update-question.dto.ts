@@ -1,10 +1,14 @@
 import { Field, InputType, Int } from '@nestjs/graphql';
-import { IsNumber } from 'class-validator';
-import { CreateQuestionInput } from './create-question.dto';
+import { IsNotEmpty, IsNumber, Length } from 'class-validator';
 
 @InputType()
-export class UpdateQuestionInput extends CreateQuestionInput {
+export class UpdateQuestionInput {
   @Field(() => Int)
   @IsNumber()
   questionId: number;
+
+  @Field(() => String)
+  @Length(1, 300)
+  @IsNotEmpty()
+  content: string;
 }

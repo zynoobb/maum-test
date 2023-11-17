@@ -1,7 +1,5 @@
 import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
 import { CreateQuestionInput } from './dto/create-question.dto';
-import { DeleteQuestionInput } from './dto/delete-question.dto';
-import { FetchQuestionInput } from './dto/fetch-question.dto';
 import { FetchQuestionsInRangeInput } from './dto/fetch-questions-inrange.dto';
 import { UpdateQuestionInput } from './dto/update-question.dto';
 import { Question } from './entites/question.entity';
@@ -21,10 +19,8 @@ export class QuestionsResolver {
   }
 
   @Query(() => Question)
-  fetchQuestion(
-    @Args('fetchQuestionInput') fetchQuestionInput: FetchQuestionInput,
-  ): Promise<Question> {
-    return this.questionsService.fetchQuestion({ fetchQuestionInput });
+  fetchQuestion(@Args('questionId') questionId: number): Promise<Question> {
+    return this.questionsService.fetchQuestion({ questionId });
   }
 
   @Query(() => [Question])
@@ -45,9 +41,7 @@ export class QuestionsResolver {
   }
 
   @Mutation(() => Boolean)
-  deleteQuestion(
-    @Args('deleteQuestionInput') deleteQuestionInput: DeleteQuestionInput,
-  ): Promise<boolean> {
-    return this.questionsService.deleteQuestion({ deleteQuestionInput });
+  deleteQuestion(@Args('questionId') questionId: number): Promise<boolean> {
+    return this.questionsService.deleteQuestion({ questionId });
   }
 }

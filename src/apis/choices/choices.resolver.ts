@@ -1,8 +1,6 @@
 import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
 import { ChoicesService } from './choices.service';
 import { CreateChoiceInput } from './dto/create-choice.dto';
-import { DeleteChoiceInput } from './dto/delete-choice.dto';
-import { FetchChoiceInput } from './dto/fetch-choice.dto';
 import { FetchChoicesInRangeInput } from './dto/fetch-choices-inrange.dto';
 import { UpdateChoiceInput } from './dto/update-choice.dto';
 import { Choice } from './entites/choice.entity';
@@ -19,10 +17,8 @@ export class ChoicesResolver {
   }
 
   @Query(() => Choice)
-  fetchChoice(
-    @Args('fetchChoiceInput') fetchChoiceInput: FetchChoiceInput,
-  ): Promise<Choice> {
-    return this.choicesService.findOneChoiceById({ fetchChoiceInput });
+  fetchChoice(@Args('choiceId') choiceId: number): Promise<Choice> {
+    return this.choicesService.fetchChoice({ choiceId });
   }
 
   @Query(() => [Choice])
@@ -43,9 +39,7 @@ export class ChoicesResolver {
   }
 
   @Mutation(() => Boolean)
-  deleteChoice(
-    @Args('deleteChoiceInput') deleteChoiceInput: DeleteChoiceInput,
-  ): Promise<boolean> {
-    return this.choicesService.deleteChoice({ deleteChoiceInput });
+  deleteChoice(@Args('choiceId') choiceId: number): Promise<boolean> {
+    return this.choicesService.deleteChoice({ choiceId });
   }
 }

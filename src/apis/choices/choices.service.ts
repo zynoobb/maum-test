@@ -6,8 +6,6 @@ import { SurveysService } from '../surveys/surveys.service';
 import { Choice } from './entites/choice.entity';
 import {
   IChoiceServiceCreate,
-  IChoiceServiceDelete,
-  IChoiceServiceFetch,
   IChoiceServiceFetchInRange,
   IChoiceServiceUpdate,
 } from './interfaces/choice-service.interface';
@@ -28,7 +26,6 @@ export class ChoicesService {
       createChoiceInput;
     const survey = await this.surveysService.findOneSurveyById({ surveyId });
     const question = await this.questionService.findOneQuestionById({
-      surveyId,
       questionId,
     });
     return this.choicesRepository.save({
@@ -36,72 +33,45 @@ export class ChoicesService {
       question,
       choiceContent,
       choiceScore,
-      answers: [],
     });
+  }
+
+  async fetchChoice({ choiceId }: { choiceId: number }): Promise<Choice> {
+    const choice = await this.findOneChoiceById({ choiceId });
+    if (!choice) {
+      throw new NotFoundException('해당 선택지가 존재하지 않습니다.');
+    }
+    return choice;
   }
 
   async updateChoice({
     updateChoiceInput,
   }: IChoiceServiceUpdate): Promise<Choice> {
-    const { surveyId, questionId, ...updateInput } = updateChoiceInput;
-    const survey = await this.surveysService.findOneSurveyById({ surveyId });
-    const question = await this.questionService.findOneQuestionById({
-      surveyId,
-      questionId,
-    });
+    const { choiceId, ...updateInput } = updateChoiceInput;
     const choice = await this.findOneChoiceById({
-      fetchChoiceInput: {
-        surveyId,
-        questionId,
-        choiceId: updateChoiceInput.choiceId,
-      },
+      choiceId,
     });
 
     return this.choicesRepository.save({
-      survey,
-      question,
       ...choice,
       ...updateInput,
     });
   }
 
-  async deleteChoice({
-    deleteChoiceInput,
-  }: IChoiceServiceDelete): Promise<boolean> {
-    const { surveyId, questionId, choiceId } = deleteChoiceInput;
-    await this.surveysService.findOneSurveyById({
-      surveyId,
-    });
-    await this.questionService.findOneQuestionById({
-      surveyId,
-      questionId,
-    });
-    await this.findOneChoiceById({
-      fetchChoiceInput: deleteChoiceInput,
-    });
-
+  async deleteChoice({ choiceId }: { choiceId }): Promise<boolean> {
     const deleteResult = await this.choicesRepository.delete({
-      survey: { surveyId },
-      question: { questionId },
       choiceId,
     });
 
     return deleteResult.affected ? true : false;
   }
 
-  async findOneChoiceById({
-    fetchChoiceInput,
-  }: IChoiceServiceFetch): Promise<Choice> {
-    const { surveyId, questionId, choiceId } = fetchChoiceInput;
+  async findOneChoiceById({ choiceId }: { choiceId: number }): Promise<Choice> {
     const choice = await this.choicesRepository.findOne({
       relations: ['survey', 'question', 'answers'],
-      where: { survey: { surveyId }, question: { questionId }, choiceId },
+      where: { choiceId },
+      order: { choiceId: 'ASC' },
     });
-
-    if (!choice) {
-      throw new NotFoundException('해당 선택지가 존재하지 않습니다.');
-    }
-
     return choice;
   }
 
@@ -120,7 +90,6 @@ export class ChoicesService {
       },
       order: { choiceId: 'ASC' },
     });
-
     return choices;
   }
 }

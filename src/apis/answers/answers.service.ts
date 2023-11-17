@@ -10,8 +10,7 @@ import { UsersService } from '../users/users.service';
 import { Answer } from './entites/answer.entity';
 import {
   IAnswerServiceCreate,
-  IAnswerServiceFetch,
-  IAnswerServiceUpdate,
+  IAnswerServiceFindOnePreAnswer,
 } from './interfaces/answer-service.interface';
 
 @Injectable()
@@ -29,70 +28,55 @@ export class AnswersService {
     const { surveyId, questionId, choiceId, userId } = createAnswerInput;
 
     const choice = await this.choicesService.findOneChoiceById({
-      fetchChoiceInput: {
-        surveyId,
-        questionId,
-        choiceId,
-      },
+      choiceId,
     });
     const user = await this.usersService.fetchUser({
-      fetchUserInput: { userId },
+      userId,
     });
-
-    const answer = await this.findOneAnswerById({
-      fetchAnswerInput: createAnswerInput,
+    const answer = await this.findOnePreAnswerById({
+      findPreAnswerInput: { surveyId, questionId, userId },
     });
 
     if (answer) {
       throw new ConflictException('이미 응답한 답변입니다.');
     }
 
-    const result = await this.answersRepository.save({
+    return this.answersRepository.save({
       survey: { surveyId },
       question: { questionId },
       choice,
       user,
     });
-
-    return result;
   }
 
-  async findOneAnswerById({
-    fetchAnswerInput,
-  }: IAnswerServiceFetch): Promise<Answer> {
-    const { surveyId, questionId, choiceId, userId } = fetchAnswerInput;
+  async fetchAnswer({ answerId }: { answerId: number }): Promise<Answer> {
+    const answer = await this.findOneAnswerById({ answerId });
+    if (!answer) {
+      throw new NotFoundException('존재하는 답변이 없습니다.');
+    }
+    return answer;
+  }
+
+  async findOneAnswerById({ answerId }: { answerId: number }): Promise<Answer> {
     const answer = await this.answersRepository.findOne({
       relations: ['survey', 'question', 'choice', 'user'],
-      where: {
-        survey: { surveyId },
-        question: { questionId },
-        choice: { choiceId },
-        user: { userId },
-      },
+      where: { answerId },
     });
-    if (!answer) {
-      throw new NotFoundException('답변이 존재하지 않습니다.');
-    }
 
     return answer;
   }
 
-  async updateAnswer({ updateAnswerInput }: IAnswerServiceUpdate) {
-    const answer = await this.findOneAnswerById({
-      fetchAnswerInput: updateAnswerInput,
+  async findOnePreAnswerById({
+    findPreAnswerInput,
+  }: IAnswerServiceFindOnePreAnswer): Promise<Answer> {
+    const { surveyId, questionId, userId } = findPreAnswerInput;
+    const preAnswer = await this.answersRepository.findOne({
+      where: {
+        survey: { surveyId },
+        question: { questionId },
+        user: { userId },
+      },
     });
-
-    if (!answer) {
-      throw new NotFoundException('존재하는 답변이 없습니다.');
-    }
-
-    const { surveyId, questionId, choiceId, userId } = updateAnswerInput;
-
-    return this.answersRepository.save({
-      survey: { surveyId },
-      question: { questionId },
-      choice: { choiceId },
-      user: { userId },
-    });
+    return preAnswer;
   }
 }

@@ -8,7 +8,6 @@ import { Repository } from 'typeorm';
 import { Survey } from './entites/survey.entity';
 import {
   ISurveysServiceCreate,
-  ISurveysServiceFetch,
   ISurveysServiceUpdate,
 } from './interfaces/survey-service.interface';
 
@@ -37,7 +36,6 @@ export class SurveysService {
     const { surveyId, ...updateInput } = updateSurveyInput;
     const survey = await this.findOneSurveyById({ surveyId });
     return this.surveysRepository.save({
-      surveyId,
       ...survey,
       ...updateInput,
     });
@@ -59,10 +57,7 @@ export class SurveysService {
     return survey;
   }
 
-  async fetchSurvey({
-    fetchSurveyInput,
-  }: ISurveysServiceFetch): Promise<Survey> {
-    const { surveyId } = fetchSurveyInput;
+  async fetchSurvey({ surveyId }: { surveyId: number }): Promise<Survey> {
     const survey = await this.surveysRepository.findOne({
       relations: ['questions', 'choices', 'answers'],
       where: { surveyId },

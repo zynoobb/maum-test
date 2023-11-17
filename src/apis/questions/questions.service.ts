@@ -5,8 +5,6 @@ import { SurveysService } from '../surveys/surveys.service';
 import { Question } from './entites/question.entity';
 import {
   IQuestionServiceCreate,
-  IQuestionServiceDelete,
-  IQuestionServiceFetch,
   IQuestionServiceFetchInRange,
   IQuestionServiceUpdate,
 } from './interfaces/question-service.interface';
@@ -28,18 +26,17 @@ export class QuestionsService {
     return this.questionsRepository.save({
       survey,
       ...createQuestionInput,
-      choices: [],
-      answers: [],
     });
   }
 
   async fetchQuestion({
-    fetchQuestionInput,
-  }: IQuestionServiceFetch): Promise<Question> {
-    const { questionId, surveyId } = fetchQuestionInput;
+    questionId,
+  }: {
+    questionId: number;
+  }): Promise<Question> {
     const question = await this.questionsRepository.findOne({
       relations: ['survey', 'choices', 'answers'],
-      where: { survey: { surveyId }, questionId },
+      where: { questionId },
       order: { choices: { choiceId: 'ASC' } },
     });
 
@@ -71,11 +68,9 @@ export class QuestionsService {
   async updateQuestion({
     updateQuestionInput,
   }: IQuestionServiceUpdate): Promise<Question> {
-    const { surveyId, questionId } = updateQuestionInput;
-    const survey = await this.surveysService.findOneSurveyById({ surveyId });
-    const question = await this.findOneQuestionById({ surveyId, questionId });
+    const { questionId } = updateQuestionInput;
+    const question = await this.findOneQuestionById({ questionId });
     const updated = await this.questionsRepository.save({
-      survey,
       ...question,
       ...updateQuestionInput,
     });
@@ -84,21 +79,20 @@ export class QuestionsService {
   }
 
   async deleteQuestion({
-    deleteQuestionInput,
-  }: IQuestionServiceDelete): Promise<boolean> {
-    const { surveyId, questionId } = deleteQuestionInput;
-    await this.findOneQuestionById({ surveyId, questionId });
+    questionId,
+  }: {
+    questionId: number;
+  }): Promise<boolean> {
     const deleteResult = await this.questionsRepository.delete({
-      survey: { surveyId },
       questionId,
     });
     return deleteResult.affected ? true : false;
   }
 
-  async findOneQuestionById({ surveyId, questionId }): Promise<Question> {
+  async findOneQuestionById({ questionId }): Promise<Question> {
     const question = await this.questionsRepository.findOne({
       relations: ['survey', 'choices', 'answers'],
-      where: { survey: { surveyId }, questionId },
+      where: { questionId },
     });
     if (!question) {
       throw new NotFoundException('해당 문항이 존재하지 않습니다.');

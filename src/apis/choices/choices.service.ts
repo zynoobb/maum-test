@@ -1,12 +1,14 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { Between, Repository } from 'typeorm';
 import { QuestionsService } from '../questions/questions.service';
 import { SurveysService } from '../surveys/surveys.service';
 import { Choice } from './entites/choice.entity';
 import {
   IChoiceServiceCreate,
   IChoiceServiceDelete,
+  IChoiceServiceFetch,
+  IChoiceServiceFetchInRange,
   IChoiceServiceUpdate,
 } from './interfaces/choice-service.interface';
 
@@ -47,9 +49,11 @@ export class ChoicesService {
       questionId,
     });
     const choice = await this.findOneChoiceById({
-      surveyId,
-      questionId,
-      choiceId: updateChoiceInput.choiceId,
+      fetchChoiceInput: {
+        surveyId,
+        questionId,
+        choiceId: updateChoiceInput.choiceId,
+      },
     });
 
     return this.choicesRepository.save({
@@ -72,9 +76,7 @@ export class ChoicesService {
       questionId,
     });
     await this.findOneChoiceById({
-      surveyId,
-      questionId,
-      choiceId,
+      fetchChoiceInput: deleteChoiceInput,
     });
 
     const deleteResult = await this.choicesRepository.delete({
@@ -86,14 +88,38 @@ export class ChoicesService {
     return deleteResult.affected ? true : false;
   }
 
-  async findOneChoiceById({ surveyId, questionId, choiceId }) {
+  async findOneChoiceById({
+    fetchChoiceInput,
+  }: IChoiceServiceFetch): Promise<Choice> {
+    const { surveyId, questionId, choiceId } = fetchChoiceInput;
     const choice = await this.choicesRepository.findOne({
+      relations: ['survey', 'question'],
       where: { survey: { surveyId }, question: { questionId }, choiceId },
     });
+
     if (!choice) {
       throw new NotFoundException('해당 선택지가 존재하지 않습니다.');
     }
 
     return choice;
+  }
+
+  async fetchChoicesInRange({
+    fetchChoicesInRangeInput,
+  }: IChoiceServiceFetchInRange): Promise<Choice[]> {
+    const { surveyId, questionId, startChoiceId, endChoiceId } =
+      fetchChoicesInRangeInput;
+
+    const choices = await this.choicesRepository.find({
+      relations: ['survey', 'question'],
+      where: {
+        survey: { surveyId },
+        question: { questionId },
+        choiceId: Between(startChoiceId, endChoiceId),
+      },
+      order: { choiceId: 'ASC' },
+    });
+
+    return choices;
   }
 }

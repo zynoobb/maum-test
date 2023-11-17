@@ -10,6 +10,7 @@ type Survey {
   updatedAt: DateTime!
   questions: [Question!]!
   choices: [Choice!]!
+  answers: [Answer!]!
 }
 
 """
@@ -24,6 +25,7 @@ type Question {
   updatedAt: DateTime!
   survey: Survey!
   choices: [Choice!]!
+  answers: [Answer!]!
 }
 
 type Choice {
@@ -41,6 +43,9 @@ type Answer {
   answerId: Int!
   createdAt: DateTime!
   updatedAt: DateTime!
+  user: User!
+  survey: Survey!
+  question: Question!
   choice: Choice!
 }
 
@@ -104,7 +109,7 @@ input FetchAnswerInput {
 type Mutation {
   createUser(createUserInput: CreateUserInput!): User!
   createSurvey(createSurveyInput: CreateSurveyInput!): Survey!
-  updateSurvey(surveyId: Float!, updateSurveyInput: UpdateSurveyInput!): Survey!
+  updateSurvey(updateSurveyInput: UpdateSurveyInput!): Survey!
   deleteSurvey(surveyId: Float!): Boolean!
   createQuestion(createQuestionInput: CreateQuestionInput!): Question!
   updateQuestion(updateQuestionInput: UpdateQuestionInput!): Question!
@@ -113,6 +118,7 @@ type Mutation {
   updateChoice(updateChoiceInput: UpdateChoiceInput!): Choice!
   deleteChoice(deleteChoiceInput: DeleteChoiceInput!): Boolean!
   createAnswer(createAnswerInput: CreateAnswerInput!): Answer!
+  updateAnswer(updateAnswerInput: UpdateAnswerInput!): Answer!
 }
 
 input CreateUserInput {
@@ -127,6 +133,7 @@ input CreateSurveyInput {
 input UpdateSurveyInput {
   subject: String
   description: String
+  surveyId: Int!
 }
 
 input CreateQuestionInput {
@@ -167,6 +174,13 @@ input DeleteChoiceInput {
 }
 
 input CreateAnswerInput {
+  userId: String!
+  surveyId: Int!
+  questionId: Int!
+  choiceId: Int!
+}
+
+input UpdateAnswerInput {
   userId: String!
   surveyId: Int!
   questionId: Int!

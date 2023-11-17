@@ -36,6 +36,7 @@ export class ChoicesService {
       question,
       choiceContent,
       choiceScore,
+      answers: [],
     });
   }
 

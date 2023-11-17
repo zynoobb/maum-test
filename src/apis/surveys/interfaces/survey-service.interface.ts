@@ -7,7 +7,6 @@ export interface ISurveysServiceCreate {
 }
 
 export interface ISurveysServiceUpdate {
-  surveyId: number;
   updateSurveyInput: UpdateSurveyInput;
 }
 

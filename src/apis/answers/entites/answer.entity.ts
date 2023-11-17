@@ -31,6 +31,7 @@ export class Answer {
     onDelete: 'CASCADE',
     onUpdate: 'CASCADE',
   })
+  @Field(() => User)
   @JoinColumn({ name: 'userId' })
   user: User;
 
@@ -38,6 +39,7 @@ export class Answer {
     onDelete: 'CASCADE',
     onUpdate: 'CASCADE',
   })
+  @Field(() => Survey)
   @JoinColumn({ name: 'surveyId' })
   survey: Survey;
 
@@ -45,6 +47,7 @@ export class Answer {
     onDelete: 'CASCADE',
     onUpdate: 'CASCADE',
   })
+  @Field(() => Question)
   @JoinColumn({ name: 'questionId' })
   question: Question;
 

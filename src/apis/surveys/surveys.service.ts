@@ -32,16 +32,14 @@ export class SurveysService {
   }
 
   async updateSurvey({
-    surveyId,
     updateSurveyInput,
   }: ISurveysServiceUpdate): Promise<Survey> {
+    const { surveyId, ...updateInput } = updateSurveyInput;
     const survey = await this.findOneSurveyById({ surveyId });
-    await this.findOneSurveyBySubject({ subject: updateSurveyInput.subject });
-
     return this.surveysRepository.save({
       surveyId,
       ...survey,
-      ...updateSurveyInput,
+      ...updateInput,
     });
   }
   async deleteSurvey({ surveyId }: { surveyId: number }): Promise<boolean> {
@@ -66,7 +64,7 @@ export class SurveysService {
   }: ISurveysServiceFetch): Promise<Survey> {
     const { surveyId } = fetchSurveyInput;
     const survey = await this.surveysRepository.findOne({
-      relations: ['questions', 'choices'],
+      relations: ['questions', 'choices', 'answers'],
       where: { surveyId },
       order: {
         questions: {
@@ -77,6 +75,7 @@ export class SurveysService {
         },
       },
     });
+
     if (!survey)
       throw new NotFoundException('해당 설문지가 존재하지 않습니다.');
     return survey;
@@ -84,7 +83,7 @@ export class SurveysService {
 
   async fetchAllSurveys(): Promise<Survey[]> {
     const surveys = await this.surveysRepository.find({
-      relations: ['questions', 'choices'],
+      relations: ['questions', 'choices', 'answers'],
       order: {
         surveyId: 'ASC',
         questions: {
@@ -100,6 +99,7 @@ export class SurveysService {
 
   async findOneSurveyById({ surveyId }: { surveyId: number }): Promise<Survey> {
     const survey = await this.surveysRepository.findOne({
+      relations: ['questions', 'choices', 'answers'],
       where: { surveyId },
     });
     if (!survey)

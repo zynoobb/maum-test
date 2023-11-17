@@ -25,7 +25,12 @@ export class QuestionsService {
     const survey = await this.surveysService.findOneSurveyById({
       surveyId: createQuestionInput.surveyId,
     });
-    return this.questionsRepository.save({ survey, ...createQuestionInput });
+    return this.questionsRepository.save({
+      survey,
+      ...createQuestionInput,
+      choices: [],
+      answers: [],
+    });
   }
 
   async fetchQuestion({
@@ -33,7 +38,7 @@ export class QuestionsService {
   }: IQuestionServiceFetch): Promise<Question> {
     const { questionId, surveyId } = fetchQuestionInput;
     const question = await this.questionsRepository.findOne({
-      relations: ['survey', 'choices'],
+      relations: ['survey', 'choices', 'answers'],
       where: { survey: { surveyId }, questionId },
       order: { choices: { choiceId: 'ASC' } },
     });
@@ -52,7 +57,7 @@ export class QuestionsService {
     await this.surveysService.findOneSurveyById({ surveyId });
 
     const questions = await this.questionsRepository.find({
-      relations: ['survey', 'choices'],
+      relations: ['survey', 'choices', 'answers'],
       where: {
         survey: { surveyId },
         questionId: Between(startQuestionId, endQuestionId),
@@ -92,6 +97,7 @@ export class QuestionsService {
 
   async findOneQuestionById({ surveyId, questionId }): Promise<Question> {
     const question = await this.questionsRepository.findOne({
+      relations: ['survey', 'choices', 'answers'],
       where: { survey: { surveyId }, questionId },
     });
     if (!question) {

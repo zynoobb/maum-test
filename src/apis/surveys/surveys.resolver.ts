@@ -32,11 +32,10 @@ export class SurveysResolver {
 
   @Mutation(() => Survey)
   updateSurvey(
-    @Args('surveyId') surveyId: number,
     @Args('updateSurveyInput')
     updateSurveyInput: UpdateSurveyInput,
   ): Promise<Survey> {
-    return this.surveysService.updateSurvey({ surveyId, updateSurveyInput });
+    return this.surveysService.updateSurvey({ updateSurveyInput });
   }
 
   @Mutation(() => Boolean)

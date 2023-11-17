@@ -1,4 +1,8 @@
-import { ConflictException, Injectable } from '@nestjs/common';
+import {
+  ConflictException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { ChoicesService } from '../choices/choices.service';
@@ -7,6 +11,7 @@ import { Answer } from './entites/answer.entity';
 import {
   IAnswerServiceCreate,
   IAnswerServiceFetch,
+  IAnswerServiceUpdate,
 } from './interfaces/answer-service.interface';
 
 @Injectable()
@@ -57,6 +62,7 @@ export class AnswersService {
   }: IAnswerServiceFetch): Promise<Answer> {
     const { surveyId, questionId, choiceId, userId } = fetchAnswerInput;
     const answer = await this.answersRepository.findOne({
+      relations: ['survey', 'question', 'choice', 'user'],
       where: {
         survey: { surveyId },
         question: { questionId },
@@ -64,6 +70,29 @@ export class AnswersService {
         user: { userId },
       },
     });
+    if (!answer) {
+      throw new NotFoundException('답변이 존재하지 않습니다.');
+    }
+
     return answer;
+  }
+
+  async updateAnswer({ updateAnswerInput }: IAnswerServiceUpdate) {
+    const answer = await this.findOneAnswerById({
+      fetchAnswerInput: updateAnswerInput,
+    });
+
+    if (!answer) {
+      throw new NotFoundException('존재하는 답변이 없습니다.');
+    }
+
+    const { surveyId, questionId, choiceId, userId } = updateAnswerInput;
+
+    return this.answersRepository.save({
+      survey: { surveyId },
+      question: { questionId },
+      choice: { choiceId },
+      user: { userId },
+    });
   }
 }

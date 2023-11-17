@@ -1,8 +1,6 @@
 import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
 import { Module } from '@nestjs/common';
 import { GraphQLModule } from '@nestjs/graphql';
-import { AppController } from './app.controller';
-import { AppService } from './app.service';
 import { ConfigModule } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { typeORMConfig } from './configs/typeorm.config';
@@ -26,7 +24,5 @@ import { ChoicesModule } from './apis/choices/choices.module';
     }),
     TypeOrmModule.forRoot(typeORMConfig),
   ],
-  controllers: [AppController],
-  providers: [AppService],
 })
 export class AppModule {}

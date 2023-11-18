@@ -93,7 +93,7 @@ input FetchAnswersResultInput {
 }
 
 type Mutation {
-  createUser(nickname: String!): User!
+  createUser(createUserInput: CreateUserInput!): User!
   createSurvey(createSurveyInput: CreateSurveyInput!): Survey!
   updateSurvey(updateSurveyInput: UpdateSurveyInput!): Survey!
   deleteSurvey(surveyId: Float!): Boolean!
@@ -106,6 +106,10 @@ type Mutation {
   createAnswer(createAnswerInput: CreateAnswerInput!): Answer!
   updateAnswer(updateAnswerInput: UpdateAnswerInput!): Answer!
   deleteAnswer(answerId: Float!): Boolean!
+}
+
+input CreateUserInput {
+  nickname: String!
 }
 
 input CreateSurveyInput {

@@ -1,5 +1,6 @@
 import { Field, InputType, Int } from '@nestjs/graphql';
-import { IsNotEmpty, IsNumber, Length } from 'class-validator';
+import { IsNumber, Length } from 'class-validator';
+import { NoWhitespace } from 'src/common/filter/custom-class-validator';
 
 @InputType()
 export class CreateChoiceInput {
@@ -13,7 +14,7 @@ export class CreateChoiceInput {
 
   @Field(() => String)
   @Length(1, 300)
-  @IsNotEmpty()
+  @NoWhitespace()
   choiceContent: string;
 
   @Field(() => Int)

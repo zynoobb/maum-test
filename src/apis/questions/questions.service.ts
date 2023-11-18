@@ -99,4 +99,15 @@ export class QuestionsService {
     }
     return question;
   }
+
+  async getQuestionsCountBySurveyId({
+    surveyId,
+  }: {
+    surveyId: number;
+  }): Promise<number> {
+    const questionsCountBySurveyId = await this.questionsRepository.count({
+      where: { survey: { surveyId } },
+    });
+    return questionsCountBySurveyId;
+  }
 }

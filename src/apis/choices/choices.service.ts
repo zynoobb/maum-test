@@ -38,9 +38,7 @@ export class ChoicesService {
 
   async fetchChoice({ choiceId }: { choiceId: number }): Promise<Choice> {
     const choice = await this.findOneChoiceById({ choiceId });
-    if (!choice) {
-      throw new NotFoundException('해당 선택지가 존재하지 않습니다.');
-    }
+
     return choice;
   }
 
@@ -72,6 +70,9 @@ export class ChoicesService {
       where: { choiceId },
       order: { choiceId: 'ASC' },
     });
+    if (!choice) {
+      throw new NotFoundException('해당 선택지가 존재하지 않습니다.');
+    }
     return choice;
   }
 
@@ -90,6 +91,7 @@ export class ChoicesService {
       },
       order: { choiceId: 'ASC' },
     });
+
     return choices;
   }
 }

@@ -56,6 +56,11 @@ type User {
   answers: [Answer!]!
 }
 
+type AnswersAndResult {
+  answers: [Answer!]!
+  totalScore: Int!
+}
+
 type Query {
   fetchUser(userId: String!): User!
   fetchSurvey(surveyId: Float!): Survey!
@@ -66,6 +71,7 @@ type Query {
   fetchChoicesInRange(fetchChoicesInRangeInput: FetchChoicesInRangeInput!): [Choice!]!
   fetchAnswer(answerId: Float!): Answer!
   fetchAnswers: [Answer!]!
+  fetchAnswersResult(fetchAnswersResultInput: FetchAnswersResultInput!): [AnswersAndResult!]!
 }
 
 input FetchQuestionsInRangeInput {
@@ -79,6 +85,11 @@ input FetchChoicesInRangeInput {
   questionId: Int!
   startChoiceId: Int = 1
   endChoiceId: Int = 100
+}
+
+input FetchAnswersResultInput {
+  userId: String!
+  surveyId: Int!
 }
 
 type Mutation {

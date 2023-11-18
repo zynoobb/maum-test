@@ -1,4 +1,5 @@
 import { CreateAnswerInput } from '../dto/create-answer.dto';
+import { FetchAnswersResultInput } from '../dto/fetch-answers-result.dto';
 import { UpdateAnswerInput } from '../dto/update-answer.dto';
 
 export interface IAnswerServiceCreate {
@@ -14,4 +15,8 @@ export interface IAnswerServiceFindOnePreAnswer {
     questionId: number;
     userId: string;
   };
+}
+
+export interface IAnswerServiceFetchAnswerResult {
+  fetchAnswersResultInput: FetchAnswersResultInput;
 }

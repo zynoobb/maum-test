@@ -7,10 +7,13 @@ import {
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { ChoicesService } from '../choices/choices.service';
+import { QuestionsService } from '../questions/questions.service';
 import { UsersService } from '../users/users.service';
+import { AnswersAndResult } from './dto/fetch-answers-result.dto';
 import { Answer } from './entites/answer.entity';
 import {
   IAnswerServiceCreate,
+  IAnswerServiceFetchAnswerResult,
   IAnswerServiceFindOnePreAnswer,
   IAnswerServiceUpdate,
 } from './interfaces/answer-service.interface';
@@ -21,6 +24,7 @@ export class AnswersService {
     @InjectRepository(Answer)
     private readonly answersRepository: Repository<Answer>,
     private readonly usersService: UsersService,
+    private readonly questionsService: QuestionsService,
     private readonly choicesService: ChoicesService,
   ) {}
 
@@ -32,6 +36,7 @@ export class AnswersService {
     const choice = await this.choicesService.findOneChoiceById({
       choiceId,
     });
+    console.log(choice);
     const user = await this.usersService.fetchUser({
       userId,
     });
@@ -83,6 +88,46 @@ export class AnswersService {
     });
   }
 
+  async fetchAnswersResult({
+    fetchAnswersResultInput,
+  }: IAnswerServiceFetchAnswerResult): Promise<[AnswersAndResult]> {
+    const { surveyId, userId } = fetchAnswersResultInput;
+    // 해당 surveyId에 맞는 문항 갯수 구하기
+    const questionsCountBySurveyId =
+      await this.questionsService.getQuestionsCountBySurveyId({ surveyId });
+
+    if (!questionsCountBySurveyId) {
+      throw new NotFoundException(
+        '존재하는 설문지가 없거나, 문항이 존재하지 않는 설문지입니다.',
+      );
+    }
+
+    // userId, surveyId에 맞는 문항 갯수와 선택지에 따른 점수의 합 구하기
+    const { totalScore, questionsCountByUserId } = await this.answersRepository
+      .createQueryBuilder('answer')
+      .leftJoinAndSelect('answer.choice', 'choice')
+      .select('SUM(choice.choiceScore)', 'totalScore')
+      .addSelect('COUNT(choice.questionId)', 'questionsCountByUserId')
+      .where('answer.survey.surveyId = :surveyId', { surveyId })
+      .andWhere('answer.user.userId = :userId', { userId })
+      .getRawOne();
+
+    // 응답하지 않은 문항이 존재하는 경우 오류 반환
+    if (questionsCountBySurveyId !== Number(questionsCountByUserId)) {
+      throw new BadRequestException('응답하지 않은 문항이 존재합니다.');
+    }
+
+    const answersBySurveyIdAndUserId = await this.answersRepository.find({
+      relations: ['survey', 'question', 'choice', 'user'],
+      where: { survey: { surveyId }, user: { userId } },
+      order: { question: { questionId: 'ASC' } },
+    });
+
+    return [
+      { answers: answersBySurveyIdAndUserId, totalScore: Number(totalScore) },
+    ];
+  }
+
   async updateAnswer({
     updateAnswerInput,
   }: IAnswerServiceUpdate): Promise<Answer> {
@@ -93,9 +138,6 @@ export class AnswersService {
       throw new NotFoundException('수정할 수 있는 답변이 존재하지 않습니다.');
     }
     const choice = await this.choicesService.findOneChoiceById({ choiceId });
-    if (!choice) {
-      throw new NotFoundException('수정할 수 있는 선택지가 존재하지 않습니다.');
-    }
 
     if (
       choice.question.questionId !== answer.question.questionId ||

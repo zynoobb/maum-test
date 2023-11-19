@@ -71,17 +71,11 @@ describe('UsersService', () => {
 
   describe('fetchUser', () => {
     it('유저ID가 존재하는 경우 User 데이터 반환해야 함.', async () => {
-      const exist: User = {
-        userId: 'existUser',
-        nickname: 'exist',
-        answers: [],
-        createdAt: new Date(),
-      };
       const userId = 'existUser';
-      jest.spyOn(repository, 'findOne').mockResolvedValue(exist);
-      const user = await service.fetchUser({ userId });
+      jest.spyOn(repository, 'findOne').mockResolvedValue(user);
+      const data = await service.fetchUser({ userId });
       expect(repository.findOne).toHaveBeenCalled();
-      expect(user).toEqual(exist);
+      expect(data).toEqual(user);
     });
 
     it('유저ID가 존재하지 않는 경우 NotFound 에러를 반환해야 함.', async () => {

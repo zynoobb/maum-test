@@ -1,7 +1,7 @@
 import { ConflictException, NotFoundException } from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
 import { getRepositoryToken } from '@nestjs/typeorm';
-import { validate, validateSync } from 'class-validator';
+import { validateSync } from 'class-validator';
 import { DeleteResult, Repository } from 'typeorm';
 import { CreateSurveyInput } from './dto/create-survey.dto';
 import { UpdateSurveyInput } from './dto/update-survey.dto';
@@ -32,7 +32,7 @@ const mockRepository = () => ({
   }),
 });
 
-describe('ServeysService', () => {
+describe('SurveysService', () => {
   let service: SurveysService;
   let repository: Repository<Survey>;
 
@@ -56,26 +56,15 @@ describe('ServeysService', () => {
   });
 
   describe('fetchSurvey', () => {
-    it('설문지ID가 존재하는 경우 Survey 데이터를 반환해야 함', async () => {
-      const exist: Survey = {
-        surveyId: 1,
-        subject: 'subject',
-        description: 'description',
-        createdAt: new Date(),
-        updatedAt: new Date(),
-        questions: [],
-        choices: [],
-        answers: [],
-      };
-
+    it('설문지ID가 존재하는 경우 Survey 데이터를 반환해야 함.', async () => {
       const surveyId = 1;
-      jest.spyOn(repository, 'findOne').mockResolvedValue(exist);
-      const survey = await service.fetchSurvey({ surveyId });
+      jest.spyOn(repository, 'findOne').mockResolvedValue(survey);
+      const data = await service.fetchSurvey({ surveyId });
       expect(repository.findOne).toBeCalled();
-      expect(survey).toEqual(exist);
+      expect(data).toEqual(survey);
     });
 
-    it('설문지ID가 존재하지 않는 경우 NotFoundExcept 에러를 반환해야 함', async () => {
+    it('설문지ID가 존재하지 않는 경우 NotFoundExcept 에러를 반환해야 함.', async () => {
       const nonExist = 1;
       jest.spyOn(repository, 'findOne').mockResolvedValue(undefined);
       expect(service.fetchSurvey({ surveyId: nonExist })).rejects.toThrow(
@@ -85,7 +74,7 @@ describe('ServeysService', () => {
   });
 
   describe('fetchAllSurveys', () => {
-    it('모든 설문 데이터를 조회해야 함', async () => {
+    it('모든 설문 데이터를 조회해야 함.', async () => {
       const mockSurveys: Survey[] = [
         {
           surveyId: 1,
@@ -110,31 +99,20 @@ describe('ServeysService', () => {
       ];
 
       jest.spyOn(repository, 'find').mockResolvedValue(mockSurveys);
-      const surveys = await service.fetchAllSurveys();
-      await expect(surveys).toEqual(mockSurveys);
+      const data = await service.fetchAllSurveys();
+      await expect(data).toEqual(mockSurveys);
     });
   });
 
   describe('findOneSurveyById', () => {
-    it('설문지ID가 존재하는 경우 Survey 데이터를 반환해야 함', async () => {
-      const exist: Survey = {
-        surveyId: 1,
-        subject: 'subject',
-        description: 'description',
-        createdAt: new Date(),
-        updatedAt: new Date(),
-        questions: [],
-        choices: [],
-        answers: [],
-      };
-
+    it('설문지ID가 존재하는 경우 Survey 데이터를 반환해야 함.', async () => {
       const surveyId = 1;
-      jest.spyOn(repository, 'findOne').mockResolvedValue(exist);
-      const survey = await service.findOneSurveyById({ surveyId });
-      expect(survey).toEqual(exist);
+      jest.spyOn(repository, 'findOne').mockResolvedValue(survey);
+      const data = await service.findOneSurveyById({ surveyId });
+      expect(data).toEqual(survey);
     });
 
-    it('설문지ID가 존재하지 않는 경우 NotFoundExcept 에러를 반환해야 함', async () => {
+    it('설문지ID가 존재하지 않는 경우 NotFoundExcept 에러를 반환해야 함.', async () => {
       const nonExist = 1;
       jest.spyOn(repository, 'findOne').mockResolvedValue(undefined);
 
@@ -145,26 +123,15 @@ describe('ServeysService', () => {
   });
 
   describe('findOneSurveyBySubject', () => {
-    it('설문지 주제가 존재하는 경우 Conflict 에러를 반환해야 함', async () => {
-      const exist: Survey = {
-        surveyId: 1,
-        subject: 'subject',
-        description: 'description',
-        createdAt: new Date(),
-        updatedAt: new Date(),
-        questions: [],
-        choices: [],
-        answers: [],
-      };
-
+    it('설문지 주제가 존재하는 경우 Conflict 에러를 반환해야 함.', async () => {
       const subject = 'subject';
-      jest.spyOn(repository, 'findOne').mockResolvedValue(exist);
+      jest.spyOn(repository, 'findOne').mockResolvedValue(survey);
       await expect(service.findOneSurveyBySubject({ subject })).rejects.toThrow(
         ConflictException,
       );
     });
 
-    it('설문지 주제가 존재하지 않는 경우 반환값 없음', async () => {
+    it('설문지 주제가 존재하지 않는 경우 반환값 없음.', async () => {
       const subject = 'subject';
       jest.spyOn(repository, 'findOne').mockResolvedValue(undefined);
 
@@ -179,23 +146,23 @@ describe('ServeysService', () => {
       // subject은 양측 공백을 불용하며 길이가 1~100 이어야 함.
       const createSurveyInput = new CreateSurveyInput();
       createSurveyInput.subject = 'pass';
-      let errors = await validate(createSurveyInput);
+      let errors = validateSync(createSurveyInput);
       expect(errors.length).toBe(0);
 
       createSurveyInput.subject = 'a'.repeat(100);
-      errors = await validate(createSurveyInput);
+      errors = validateSync(createSurveyInput);
       expect(errors.length).toBe(0);
 
       createSurveyInput.subject = ' ';
-      errors = await validate(createSurveyInput);
+      errors = validateSync(createSurveyInput);
       expect(errors.length).toBeGreaterThan(0);
 
       createSurveyInput.subject = ' aa ';
-      errors = await validate(createSurveyInput);
+      errors = validateSync(createSurveyInput);
       expect(errors.length).toBeGreaterThan(0);
 
       createSurveyInput.subject = 'a'.repeat(101);
-      errors = await validate(createSurveyInput);
+      errors = validateSync(createSurveyInput);
       expect(errors.length).toBeGreaterThan(0);
     });
 
@@ -239,28 +206,18 @@ describe('ServeysService', () => {
         .spyOn(repository, 'save')
         .mockResolvedValueOnce(createSurveyInput as Survey);
 
-      const result = await service.createSurvey({ createSurveyInput });
+      const data = await service.createSurvey({ createSurveyInput });
       expect(service.findOneSurveyBySubject).toHaveBeenCalledWith({
         subject: createSurveyInput.subject,
       });
 
       expect(repository.save).toHaveBeenCalledWith(createSurveyInput);
-      expect(result).toEqual(createSurveyInput);
+      expect(data).toEqual(createSurveyInput);
     });
   });
 
   describe('updateSurvey', () => {
-    it('정상 데이터가 입력된 경우 정상적으로 수정되어야 함', async () => {
-      const exist: Survey = {
-        surveyId: 1,
-        subject: 'subject',
-        description: 'description',
-        answers: [],
-        questions: [],
-        choices: [],
-        createdAt: new Date(),
-        updatedAt: new Date(),
-      };
+    it('정상 데이터가 입력된 경우 정상적으로 수정되어야 함.', async () => {
       const updateSurveyInput: UpdateSurveyInput = {
         surveyId: 1,
         subject: 'subject',
@@ -268,10 +225,10 @@ describe('ServeysService', () => {
       };
 
       const mockSurveyRepository: Repository<Survey> = {
-        findOne: jest.spyOn(repository, 'findOne').mockResolvedValue(exist),
+        findOne: jest.spyOn(repository, 'findOne').mockResolvedValue(survey),
         save: jest
           .spyOn(repository, 'save')
-          .mockResolvedValue({ ...exist, ...updateSurveyInput }),
+          .mockResolvedValue({ ...survey, ...updateSurveyInput }),
       } as any;
 
       const service = new SurveysService(mockSurveyRepository);
@@ -284,33 +241,33 @@ describe('ServeysService', () => {
       //   .spyOn(repository, 'save')
       //   .mockResolvedValue(updateSurveyInput as Survey);
 
-      const survey = await service.updateSurvey({ updateSurveyInput });
+      const data = await service.updateSurvey({ updateSurveyInput });
       expect(repository.save).toHaveBeenCalledWith({
-        ...exist,
+        ...survey,
         ...updateSurveyInput,
       });
-      expect(survey).toEqual({ ...exist, ...updateSurveyInput });
+      expect(data).toEqual({ ...survey, ...updateSurveyInput });
     });
   });
 
   describe('deleteSurvey', () => {
-    it('설문지 삭제 시 true를 반환해야 함', async () => {
+    it('설문지 삭제 시 true를 반환해야 함.', async () => {
       const surveyId = 1;
       const deleteResult = { affected: 1 } as DeleteResult;
 
       jest.spyOn(repository, 'delete').mockResolvedValue(deleteResult);
-      const result = await service.deleteSurvey({ surveyId });
+      const data = await service.deleteSurvey({ surveyId });
       expect(repository.delete).toHaveBeenCalledWith({ surveyId });
-      expect(result).toBe(true);
+      expect(data).toBe(true);
     });
-    it('설문지 미 삭제 시 false를 반환해야 함', async () => {
+    it('설문지 미 삭제 시 false를 반환해야 함.', async () => {
       const surveyId = 1;
       const deleteResult = { affected: 0 } as DeleteResult;
 
       jest.spyOn(repository, 'delete').mockResolvedValue(deleteResult);
-      const result = await service.deleteSurvey({ surveyId });
+      const data = await service.deleteSurvey({ surveyId });
       expect(repository.delete).toHaveBeenCalledWith({ surveyId });
-      expect(result).toBe(false);
+      expect(data).toBe(false);
     });
   });
 });

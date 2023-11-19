@@ -33,10 +33,10 @@ const question: Question = {
 };
 
 const mockRepository = () => ({
-  save: jest.fn((x) => survey),
-  findOne: jest.fn((x) => survey),
-  find: jest.fn(() => [survey]),
-  update: jest.fn((x) => survey),
+  save: jest.fn((x) => question),
+  findOne: jest.fn((x) => question),
+  find: jest.fn(() => [question]),
+  update: jest.fn((x) => question),
   delete: jest.fn((x) => () => {
     return {
       raw: undefined,

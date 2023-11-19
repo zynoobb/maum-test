@@ -49,12 +49,11 @@ export class SurveysService {
     subject,
   }: {
     subject: string;
-  }): Promise<Survey> {
+  }): Promise<void> {
     const survey = await this.surveysRepository.findOne({
       where: { subject },
     });
     if (survey) throw new ConflictException('이미 존재하는 주제입니다.');
-    return survey;
   }
 
   async fetchSurvey({ surveyId }: { surveyId: number }): Promise<Survey> {

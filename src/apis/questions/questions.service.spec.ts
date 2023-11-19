@@ -3,34 +3,17 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { getRepositoryToken } from '@nestjs/typeorm';
 import { validateSync } from 'class-validator';
 import { DeleteResult, Repository } from 'typeorm';
-import { Survey } from '../surveys/entites/survey.entity';
 import { SurveysService } from '../surveys/surveys.service';
 import { CreateQuestionInput } from './dto/create-question.dto';
 import { FetchQuestionsInRangeInput } from './dto/fetch-questions-inrange.dto';
 import { UpdateQuestionInput } from './dto/update-question.dto';
 import { Question } from './entites/question.entity';
 import { QuestionsService } from './questions.service';
-
-const survey: Survey = {
-  surveyId: 1,
-  subject: 'subject',
-  description: 'description',
-  createdAt: new Date(),
-  updatedAt: new Date(),
-  questions: [],
-  choices: [],
-  answers: [],
-};
-
-const question: Question = {
-  questionId: 1,
-  content: 'content',
-  createdAt: new Date(),
-  updatedAt: new Date(),
+import {
   survey,
-  choices: [],
-  answers: [],
-};
+  question,
+  mockSurveysService,
+} from '../../common/test/test.config';
 
 const mockRepository = () => ({
   save: jest.fn((x) => question),
@@ -44,10 +27,6 @@ const mockRepository = () => ({
     } as DeleteResult;
   }),
   count: jest.fn((x) => Number),
-});
-
-const mockSurveysService = () => ({
-  findOneSurveyById: jest.fn(() => survey),
 });
 
 describe('QuestionsService', () => {

@@ -6,13 +6,7 @@ import { UsersService } from './users.service';
 import { User } from './entities/user.entity';
 import { validateSync } from 'class-validator';
 import { CreateUserInput } from './dto/create-user.dto';
-
-const user: User = {
-  userId: 'userId',
-  createdAt: new Date(),
-  nickname: 'nickname',
-  answers: [],
-};
+import { user } from '../../common/test/test.config';
 
 const mockRepository = () => ({
   save: jest.fn((id) => user),

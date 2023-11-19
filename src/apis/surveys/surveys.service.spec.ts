@@ -7,17 +7,7 @@ import { CreateSurveyInput } from './dto/create-survey.dto';
 import { UpdateSurveyInput } from './dto/update-survey.dto';
 import { Survey } from './entites/survey.entity';
 import { SurveysService } from './surveys.service';
-
-const survey: Survey = {
-  surveyId: 1,
-  subject: 'subject',
-  description: 'description',
-  createdAt: new Date(),
-  updatedAt: new Date(),
-  questions: [],
-  choices: [],
-  answers: [],
-};
+import { survey } from '../../common/test/test.config';
 
 const mockRepository = () => ({
   save: jest.fn((x) => survey),

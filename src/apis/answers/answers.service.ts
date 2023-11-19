@@ -36,7 +36,7 @@ export class AnswersService {
     const choice = await this.choicesService.findOneChoiceById({
       choiceId,
     });
-    console.log(choice);
+
     const user = await this.usersService.fetchUser({
       userId,
     });

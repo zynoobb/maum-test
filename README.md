@@ -1,5 +1,23 @@
 # **마음 연구소 코딩 테스트 (설문조사)**
 
+**목차**
+
+[기술 스택](#기술-스택)
+
+[환경변수(.env)](<#환경변수(.env)>)
+
+[서버 구동 방법](#서버-구동-방법)
+
+[ERD](#erd)
+
+[API 명세서](#api-명세서)
+
+[아키텍쳐](#아키텍쳐)
+
+[깃 컨벤션](#깃-컨벤션)
+
+<hr><br>
+
 **기술 스택**
 
 ```
@@ -18,10 +36,10 @@
 
 ```
 PORT=4000
-TYPEORM_HOST= <예시 : postgres>
+TYPEORM_HOST=postgres
 TYPEORM_PORT=5432
-TYPEORM_USERNAME= <예시 : root>
-TYPEORM_PASSWORD= <예시 : root>
+TYPEORM_USERNAME=root
+TYPEORM_PASSWORD=root
 TYPEORM_DATABASE=maum
 ```
 
@@ -33,7 +51,6 @@ TYPEORM_DATABASE=maum
 - git clone https://github.com/zynoobb/mayeon-test.git
 
 - 루트 폴더에 .env 생성 및 복사
-(환경변수 HOST, USERNAME, PASSWORD가 다를 시 사용자 환경에 맞춰 수정해주세요.)
 
 - yarn install
 

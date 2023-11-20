@@ -4,7 +4,7 @@
 
 [기술 스택](#기술-스택)
 
-[환경변수(.env)](<#환경변수(.env)>)
+[환경변수(.env)](#환경변수env)
 
 [서버 구동 방법](#서버-구동-방법)
 
@@ -18,7 +18,7 @@
 
 <hr><br>
 
-**기술 스택**
+### **기술 스택**
 
 ```
 - TypeScript
@@ -32,7 +32,7 @@
 
 <hr><br>
 
-**환경변수(.env)**
+### **환경변수(.env)**
 
 ```
 PORT=4000
@@ -45,7 +45,7 @@ TYPEORM_DATABASE=maum
 
 <hr><br>
 
-**서버 구동 방법**
+### **서버 구동 방법**
 
 ```
 - git clone https://github.com/zynoobb/mayeon-test.git
@@ -63,25 +63,25 @@ TYPEORM_DATABASE=maum
 
 <hr><br>
 
-**ERD**
+### **ERD**
 
 ![ERD](https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fblog.kakaocdn.net%2Fdn%2FbtkRNU%2FbtsAy7pfgjC%2F7RKA6hyUKkHTvJyJqMfiK0%2Fimg.png)
 
 <hr><br>
 
-**API 명세서**
+### **API 명세서**
 
 ![API명세서](https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fblog.kakaocdn.net%2Fdn%2FbguGHF%2FbtsAugnZwuY%2FDbkxOxLMqiiVs9gAp0TIx1%2Fimg.png)
 
 <hr><br>
 
-**아키텍쳐**
+### **아키텍쳐**
 
 ![아키텍쳐](https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fblog.kakaocdn.net%2Fdn%2FMrT73%2FbtsACn56A42%2F2koOsY7CK825QApBN3yDkk%2Fimg.jpg)
 
 <hr><br>
 
-**깃 컨벤션**
+### **깃 컨벤션**
 
 | 태그     | 내용                     |
 | -------- | ------------------------ |

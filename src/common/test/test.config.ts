@@ -59,6 +59,7 @@ export const mockSurveysService = () => ({
 
 export const mockQuestionsService = () => ({
   findOneQuestionById: jest.fn(() => question),
+  getQuestionsCountBySurveyId: jest.fn(() => Number),
 });
 
 export const mockChoicesService = () => ({
@@ -67,4 +68,5 @@ export const mockChoicesService = () => ({
 
 export const mockUsersService = () => ({
   findOneUserById: jest.fn(() => user),
+  fetchUser: jest.fn(() => user),
 });
